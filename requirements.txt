@@ -1,1 +1,2 @@
-# Your requirements go here
+blessed==1.19.0
+numpy==1.21.2
