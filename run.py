@@ -107,6 +107,9 @@ class Node:
         self.previous = None
 
 def generate_grid():
+    """
+    Generates and returns a grid of nodes.
+    """
     return np.array([[Node(row, col) for col in range(WIDTH)] for row in range(HEIGHT)])
 
 def update_all_neighbors(grid):
@@ -120,7 +123,7 @@ def update_all_neighbors(grid):
 def reset_grid(grid):
     """
     Resets all nodes on the grid to its initial state.
-    After that creates a wall border on the grid.
+    After that creates a wall border around the grid.
     """
     for row in grid:
         for node in row:
@@ -216,8 +219,8 @@ def generate_maze_recursive_division(
         return
     
     if orientation == "horizontal":
-        possible_rows = [row for row in range(row_start, row_end + 1, 2)]
-        possible_cols = [col for col in range(col_start - 1, col_end + 2, 2)]
+        possible_rows = list(range(row_start, row_end + 1, 2))
+        possible_cols = list(range(col_start - 1, col_end + 2, 2))
         current_row = random.choice(possible_rows)
         col_to_skip = random.choice(possible_cols)
         for col in range(col_start - 1, col_end + 2):
@@ -238,8 +241,8 @@ def generate_maze_recursive_division(
             generate_maze_recursive_division(grid, current_row + 2, row_end, col_start, col_end, "vertical")
 
     else:
-        possible_rows = [row for row in range(row_start - 1, row_end + 2, 2)]
-        possible_cols = [col for col in range(col_start, col_end + 1, 2)]
+        possible_rows = list(range(row_start - 1, row_end + 2, 2))
+        possible_cols = list(range(col_start, col_end + 1, 2))
         row_to_skip = random.choice(possible_rows)
         current_col = random.choice(possible_cols)
         for row in range(row_start - 1, row_end + 2):
