@@ -263,6 +263,20 @@ def generate_maze_recursive_division(
         else:
             generate_maze_recursive_division(grid, row_start, row_end, current_col + 2, col_end, "vertical")
 
+def draw_path(grid, end_node):
+    """
+    Draws path from the end node to the start node on the grid.
+    """
+    current_node = end_node
+    while current_node.previous:
+        if current_node == end_node:
+            end_node.make_end()
+            current_node = current_node.previous
+            continue
+        current_node.make_path()
+        current_node = current_node.previous
+        display_grid(grid)
+
 def dijkstra(grid, start_node, end_node):
     """
     Searches for the shortest path from the start node to the end node using Dijkstra's algorithm.
