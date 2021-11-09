@@ -40,7 +40,20 @@ class Node:
         return self.row, self.col
     
     def update_neighbors(self, grid):
-        pass
+        self.neighbors = []
+        row, col = self.get_position()
+        # Node to the top of the current node
+        if row > 0 and not grid[row - 1][col].is_wall():
+            self.neighbors.append(grid[row - 1][col])
+        # Node to the bottom of the current node
+        if row < HEIGHT - 1 and not grid[row + 1][col].is_wall():
+            self.neighbors.append(grid[row + 1][col])
+        # Node to the left of the current node
+        if col > 0 and not grid[row][col - 1].is_wall():
+            self.neighbors.append(grid[row][col - 1])
+        # Node to the right of the current node
+        if col < WIDTH - 1 and not grid[row][col + 1].is_wall():
+            self.neighbors.append(grid[row][col + 1])
     
     def is_end(self):
         return self.color == END
