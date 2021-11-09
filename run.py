@@ -16,8 +16,8 @@ END = "🏁"
 # EMPTY = "　"
 EMPTY = " "
 
-WIDTH = 21
-HEIGHT = 13
+WIDTH = 35
+HEIGHT = 21
 
 
 class Node:
