@@ -165,3 +165,15 @@ def generate_random_pattern(grid):
         for col in range(1, WIDTH):
             if random.random() < 0.14:
                 grid[row][col].make_wall()
+                
+def generate_maze_recursive_division(grid, row_start, row_end, col_start, col_end, orientation="horizontal"):
+    """
+    Generates a maze using recursive division algorithm.
+    """
+    pass
+
+def dijkstra(grid, start_node, end_node):
+    """
+    Searches for the shortest path from the start node to the end node using Dijkstra's algorithm.
+    """
+    pass
