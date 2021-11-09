@@ -125,3 +125,34 @@ def generate_vertical_maze(grid):
         for i in range(1, HEIGHT - 1):
             grid[:, col][i].make_wall()
         grid[:, col][skip].reset()
+        
+def generate_spiral_maze(grid):
+    """
+    Generates a maze in a form of a spiral
+    """
+    left = 1
+    right = WIDTH - 2
+    top = 2
+    bottom = HEIGHT - 2
+    
+    while left < right and top < bottom:
+        if left > right:
+            break
+        for i in range(left, right):
+            grid[top][i].make_wall()
+        top += 2
+        if top > bottom:
+            break
+        for i in range(top - 1, bottom):
+            grid[i][right - 1].make_wall()
+        right -= 2
+        if right < left:
+            break
+        for i in range(right, left, -1):
+            grid[bottom - 1][i].make_wall()
+        bottom -= 2
+        if bottom < top:
+            break
+        for i in range(bottom, top - 1, -1):
+            grid[i][left + 1].make_wall()
+        left += 2
