@@ -142,7 +142,7 @@ def display_grid(grid):
     """
     print(terminal.move(0, 0) + terminal.clear)
     for row in grid:
-        print("".join(str(node) for node in row))
+        print(" ".join(str(node) for node in row))
     sleep(0.1)
 
 def generate_horizontal_maze(grid):
