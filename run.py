@@ -187,8 +187,52 @@ def generate_maze_recursive_division(
     """
     Generates a maze using recursive division algorithm.
     """
-    pass
+    if row_end - row_start < 2 and col_end - col_start < 2:
+        return
+    
+    if orientation == "horizontal":
+        possible_rows = [row for row in range(row_start, row_end + 1, 2)]
+        possible_cols = [col for col in range(col_start - 1, col_end + 2, 2)]
+        current_row = random.choice(possible_rows)
+        col_to_skip = random.choice(possible_cols)
+        for col in range(col_start - 1, col_end + 2):
+            grid[current_row][col].make_wall()
+            if col == col_to_skip:
+                grid[current_row][col].make_empty()
+                continue
+            display_grid(grid)
+            
+        if current_row - 2 - row_start > col_end - col_start:
+            generate_maze_recursive_division(grid, row_start, current_row - 2, col_start, col_end, "horizontal")
+        else:
+            generate_maze_recursive_division(grid, row_start, current_row - 2, col_start, col_end, "vertical")
+            
+        if row_end - current_row - 2 > col_end - col_start:
+            generate_maze_recursive_division(grid, current_row + 2, row_end, col_start, col_end, "horizontal")
+        else:
+            generate_maze_recursive_division(grid, current_row + 2, row_end, col_start, col_end, "vertical")
 
+    else:
+        possible_rows = [row for row in range(row_start - 1, row_end + 2, 2)]
+        possible_cols = [col for col in range(col_start, col_end + 1, 2)]
+        row_to_skip = random.choice(possible_rows)
+        current_col = random.choice(possible_cols)
+        for row in range(row_start - 1, row_end + 2):
+            grid[row][current_col].make_wall()
+            if row == row_to_skip:
+                grid[row][current_col].make_empty()
+                continue
+            display_grid(grid)
+            
+        if row_end - row_start > current_col - 2 - col_start:
+            generate_maze_recursive_division(grid, row_start, row_end, col_start, current_col - 2, "horizontal")
+        else:
+            generate_maze_recursive_division(grid, row_start, row_end, col_start, current_col - 2, "vertical")
+            
+        if row_end - row_start > col_end - current_col - 2:
+            generate_maze_recursive_division(grid, row_start, row_end, current_col + 2, col_end, "horizontal")
+        else:
+            generate_maze_recursive_division(grid, row_start, row_end, current_col + 2, col_end, "vertical")
 
 def dijkstra(grid, start_node, end_node):
     """
