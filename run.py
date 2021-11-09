@@ -106,6 +106,31 @@ class Node:
         self.distance = float("inf")
         self.previous = None
 
+def generate_grid():
+    return np.array([[Node(row, col) for col in range(WIDTH)] for row in range(HEIGHT)])
+
+def update_all_neighbors(grid):
+    """
+    Updates neighbors of all nodes on the grid.
+    """
+    for row in grid:
+        for node in row:
+            node.update_neighbors(grid)
+
+def reset_grid(grid):
+    """
+    Resets all nodes on the grid to its initial state.
+    After that creates a wall border on the grid.
+    """
+    for row in grid:
+        for node in row:
+            node.reset()
+    for i in range(HEIGHT):
+        grid[i][0].make_wall()
+        grid[i][-1].make_wall()
+    for i in range(WIDTH):
+        grid[0][i].make_wall()
+        grid[-1][i].make_wall()
 
 def display_grid(grid):
     """
@@ -238,4 +263,6 @@ def dijkstra(grid, start_node, end_node):
     """
     Searches for the shortest path from the start node to the end node using Dijkstra's algorithm.
     """
-    pass
+    start_node.distance = 0
+    start_node.visited = True
+    start_node.previous = None
