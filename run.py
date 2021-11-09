@@ -283,7 +283,7 @@ def dijkstra(grid, start_node, end_node):
     """
     update_all_neighbors(grid)
     start_node.distance = 0
-    start_node.make_visited()
+    # start_node.make_visited()
     start_node.previous = None
     nodes_to_visit = [start_node]
     
@@ -291,7 +291,7 @@ def dijkstra(grid, start_node, end_node):
         current_node = nodes_to_visit.pop(0)
         
         if current_node == end_node:
-            pass
+            draw_path(grid, end_node)
             return
         
         for neighbor in current_node.neighbors:
@@ -308,3 +308,22 @@ def dijkstra(grid, start_node, end_node):
         if current_node != start_node:
             current_node.make_visited()
             display_grid(grid)
+            
+def main():
+    """
+    Main function.
+    """
+    grid = generate_grid()
+    reset_grid(grid)
+    
+    generate_maze_recursive_division(grid, 2, HEIGHT - 2, 2, WIDTH - 2, "horizontal")
+    
+    start = grid[1][1]
+    end = grid[-2][-2]
+    start.make_start()
+    end.make_end()
+    
+    dijkstra(grid, start, end)
+    
+if __name__ == "__main__":
+    main()
