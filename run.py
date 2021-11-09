@@ -35,3 +35,59 @@ class Node:
         
     def __str__(self):
         return self.color
+    
+    def get_position(self):
+        return self.row, self.col
+    
+    def update_neighbors(self, grid):
+        pass
+    
+    def is_end(self):
+        return self.color == END
+    
+    def is_start(self):
+        return self.color == START
+    
+    def is_wall(self):
+        return self.color == WALL
+    
+    def is_empty(self):
+        return self.color == EMPTY
+    
+    def is_visited(self):
+        return self.visited
+    
+    def is_passage(self):
+        return self.passage
+    
+    def make_start(self):
+        self.color = START
+        
+    def make_end(self):
+        self.color = END
+        
+    def make_wall(self):
+        self.color = WALL
+        
+    def make_empty(self):
+        self.color = EMPTY
+        
+    def make_visited(self):
+        self.visited = True
+        
+    def make_active(self):
+        self.color = ACTIVE
+        
+    def make_passage(self):
+        self.passage = True
+        self.color = EMPTY
+    
+    def make_path(self):
+        self.color = PATH
+        
+    def reset(self):
+        self.color = EMPTY
+        self.visited = False
+        self.passage = False
+        self.distance = float('inf')
+        self.previous = None
