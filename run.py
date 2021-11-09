@@ -17,3 +17,18 @@ EMPTY = "　"
 
 WIDTH = 41
 HEIGHT = 31
+
+class Node:
+    """
+    Class that represents every cell on the grid.
+    """
+    
+    def __init__(self, row, col):
+        self.row = row
+        self.col = col
+        self.color = EMPTY
+        self.neighbors = []
+        self.visited = False
+        self.passage = False
+        self.distance = float('inf')
+        self.previous = None
