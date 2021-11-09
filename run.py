@@ -115,3 +115,13 @@ def generate_horizontal_maze(grid):
             if col == skip:
                 continue
             grid[row][col].make_wall()
+            
+def generate_vertical_maze(grid):
+    """
+    Generates a maze with vertical walls with random passages
+    """
+    for col in range(2, WIDTH - 2, 2):
+        skip = random.randint(1, HEIGHT - 1)
+        for i in range(1, HEIGHT - 1):
+            grid[:, col][i].make_wall()
+        grid[:, col][skip].reset()
