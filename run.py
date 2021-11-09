@@ -156,3 +156,12 @@ def generate_spiral_maze(grid):
         for i in range(bottom, top - 1, -1):
             grid[i][left + 1].make_wall()
         left += 2
+        
+def generate_random_pattern(grid):
+    """
+    Generates randomly placed barriers on the grid.
+    """
+    for row in range(1, HEIGHT):
+        for col in range(1, WIDTH):
+            if random.random() < 0.14:
+                grid[row][col].make_wall()
