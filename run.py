@@ -13,7 +13,8 @@ VISITED = "🟩"
 ACTIVE = "🟨"
 START = "🧐"
 END = "🏁"
-EMPTY = "　"
+# EMPTY = "　"
+EMPTY = " "
 
 WIDTH = 21
 HEIGHT = 13
