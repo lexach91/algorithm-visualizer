@@ -32,3 +32,6 @@ class Node:
         self.passage = False
         self.distance = float('inf')
         self.previous = None
+        
+    def __str__(self):
+        return self.color
