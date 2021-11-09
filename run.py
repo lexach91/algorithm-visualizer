@@ -87,6 +87,7 @@ class Node:
         self.color = EMPTY
 
     def make_visited(self):
+        self.color = VISITED
         self.visited = True
 
     def make_active(self):
@@ -266,6 +267,30 @@ def dijkstra(grid, start_node, end_node):
     """
     Searches for the shortest path from the start node to the end node using Dijkstra's algorithm.
     """
+    update_all_neighbors(grid)
     start_node.distance = 0
-    start_node.visited = True
+    start_node.make_visited()
     start_node.previous = None
+    nodes_to_visit = [start_node]
+    
+    while nodes_to_visit:
+        current_node = nodes_to_visit.pop(0)
+        
+        if current_node == end_node:
+            pass
+            return
+        
+        for neighbor in current_node.neighbors:
+            distance_from_start = current_node.distance + 1
+            
+            if distance_from_start < neighbor.distance:
+                neighbor.previous = current_node
+                neighbor.distance = distance_from_start
+                
+                if neighbor not in nodes_to_visit:
+                    nodes_to_visit.append(neighbor)
+                    neighbor.make_active()
+                    
+        if current_node != start_node:
+            current_node.make_visited()
+            display_grid(grid)
