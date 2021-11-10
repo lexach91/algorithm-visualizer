@@ -1,7 +1,8 @@
-from blessed import Terminal, terminal
 import random
 import numpy as np
 from time import sleep
+from blessed import Terminal, terminal
+from simple_term_menu import TerminalMenu
 
 # create a Terminal instance
 terminal = Terminal()
@@ -13,8 +14,8 @@ VISITED = "🟩"
 ACTIVE = "🟨"
 START = "🧐"
 END = "🏁"
-# EMPTY = "　"
-EMPTY = " "
+EMPTY = "　"
+# EMPTY = " "
 
 WIDTH = 35
 HEIGHT = 21
@@ -75,6 +76,9 @@ class Node:
     def is_passage(self):
         return self.passage
 
+    def is_active(self):
+        return self.color == ACTIVE
+    
     def make_start(self):
         self.color = START
 
@@ -108,6 +112,7 @@ class Node:
         self.distance = float("inf")
         self.previous = None
 
+
 def generate_grid():
     """
     Generates and returns a grid of nodes.
@@ -133,9 +138,20 @@ def reset_grid(grid):
     for i in range(HEIGHT):
         grid[i][0].make_wall()
         grid[i][-1].make_wall()
+        display_grid(grid)
     for i in range(WIDTH):
         grid[0][i].make_wall()
         grid[-1][i].make_wall()
+        display_grid(grid)
+
+def reset_grid_partially(grid):
+    """
+    Resets visited nodes on the grid before running another algorithm.
+    """
+    for row in grid:
+        for node in row:
+            if node.is_visited() or node.is_active() and not node.is_end() and not node.is_start():
+                node.reset()
 
 def display_grid(grid):
     """
@@ -143,7 +159,7 @@ def display_grid(grid):
     """
     print(terminal.move(0, 0) + terminal.clear)
     for row in grid:
-        print(" ".join(str(node) for node in row))
+        print("".join(str(node) for node in row))
     sleep(0.1)
 
 def generate_horizontal_maze(grid):
@@ -156,6 +172,7 @@ def generate_horizontal_maze(grid):
             if col == skip:
                 continue
             grid[row][col].make_wall()
+            display_grid(grid)
 
 
 def generate_vertical_maze(grid):
@@ -163,9 +180,10 @@ def generate_vertical_maze(grid):
     Generates a maze with vertical walls with random passages
     """
     for col in range(2, WIDTH - 2, 2):
-        skip = random.randint(1, HEIGHT - 1)
+        skip = random.randint(1, HEIGHT - 2)
         for i in range(1, HEIGHT - 1):
             grid[:, col][i].make_wall()
+            display_grid(grid)
         grid[:, col][skip].reset()
 
 
@@ -183,21 +201,25 @@ def generate_spiral_maze(grid):
             break
         for i in range(left, right):
             grid[top][i].make_wall()
+            display_grid(grid)            
         top += 2
         if top > bottom:
             break
         for i in range(top - 1, bottom):
             grid[i][right - 1].make_wall()
+            display_grid(grid)
         right -= 2
         if right < left:
             break
         for i in range(right, left, -1):
             grid[bottom - 1][i].make_wall()
+            display_grid(grid)
         bottom -= 2
         if bottom < top:
             break
         for i in range(bottom, top - 1, -1):
             grid[i][left + 1].make_wall()
+            display_grid(grid)
         left += 2
 
 
@@ -209,6 +231,7 @@ def generate_random_pattern(grid):
         for col in range(1, WIDTH):
             if random.random() < 0.14:
                 grid[row][col].make_wall()
+        display_grid(grid)
 
 
 def generate_maze_recursive_division(
@@ -282,6 +305,7 @@ def dijkstra(grid, start_node, end_node):
     """
     Searches for the shortest path from the start node to the end node using Dijkstra's algorithm.
     """
+    reset_grid_partially(grid)
     update_all_neighbors(grid)
     start_node.distance = 0
     # start_node.make_visited()
@@ -315,16 +339,132 @@ def main():
     Main function.
     """
     grid = generate_grid()
-    reset_grid(grid)
+    start_node = None
+    end_node = None
     
-    generate_maze_recursive_division(grid, 2, HEIGHT - 2, 2, WIDTH - 2, "horizontal")
+    options_main = [
+        "Grid options", 
+        "Place start and end node", 
+        "Pathfinder algorithms",
+        "Exit"
+        ]
+    options_grid = [
+        "Empty grid", 
+        "Random pattern", 
+        "Maze with vertical walls", 
+        "Maze with horizontal walls",
+        "Maze with spiral pattern",
+        "Maze recursive division",
+        "Go back"
+        ]
+    options_start_end = [
+        "Place by default",
+        "Place randomly",
+        "Place manually",
+        "Go back"
+    ]
+    options_pathfinder = [
+        "Dijkstra's algorithm",
+        "Go back"
+    ]
+    main_menu = TerminalMenu(options_main, title="Main menu")
+    grid_menu = TerminalMenu(options_grid, title="Grid menu")
+    start_end_menu = TerminalMenu(options_start_end, title="Start and end node menu")
+    pathfinder_menu = TerminalMenu(options_pathfinder, title="Pathfinder menu")
     
-    start = grid[1][1]
-    end = grid[-2][-2]
-    start.make_start()
-    end.make_end()
+    app_running = True
     
-    dijkstra(grid, start, end)
+    while app_running:
+        user_choice = main_menu.show()
+        if options_main[user_choice] == "Grid options":
+            user_choice = grid_menu.show()
+            if options_grid[user_choice] == "Empty grid":
+                reset_grid(grid)
+                display_grid(grid)
+            elif options_grid[user_choice] == "Random pattern":
+                reset_grid(grid)
+                generate_random_pattern(grid)
+                display_grid(grid)
+            elif options_grid[user_choice] == "Maze with vertical walls":
+                reset_grid(grid)
+                generate_vertical_maze(grid)
+                display_grid(grid)
+            elif options_grid[user_choice] == "Maze with horizontal walls":
+                reset_grid(grid)
+                generate_horizontal_maze(grid)
+                display_grid(grid)
+            elif options_grid[user_choice] == "Maze with spiral pattern":
+                reset_grid(grid)
+                generate_spiral_maze(grid)
+                display_grid(grid)
+            elif options_grid[user_choice] == "Maze recursive division":
+                reset_grid(grid)
+                generate_maze_recursive_division(grid, 2, HEIGHT - 2, 2, WIDTH - 2, "horizontal")
+                display_grid(grid)
+            elif options_grid[user_choice] == "Go back":
+                user_choice = main_menu.show()
+        elif options_main[user_choice] == "Place start and end node":
+            user_choice = start_end_menu.show()
+            if options_start_end[user_choice] == "Place by default":
+                if start_node:
+                    start_node.make_empty()
+                    start_node = None
+                if end_node:
+                    end_node.make_empty()
+                    end_node = None
+                start_node = grid[1][1]
+                end_node = grid[HEIGHT - 2][WIDTH - 2]
+                start_node.make_start()
+                end_node.make_end()
+                display_grid(grid)
+            elif options_start_end[user_choice] == "Place randomly":
+                possible_nodes = []
+                if start_node:
+                    start_node.make_empty()
+                    start_node = None
+                if end_node:
+                    end_node.make_empty()
+                    end_node = None
+                for row in grid:
+                    for node in row:
+                        if node.is_empty():
+                            possible_nodes.append(node)
+                start_node = random.choice(possible_nodes)
+                possible_nodes.remove(start_node)
+                end_node = random.choice(possible_nodes)
+                start_node.make_start()
+                end_node.make_end()
+                display_grid(grid)
+            elif options_start_end[user_choice] == "Place manually":
+                if start_node:
+                    start_node.make_empty()
+                    start_node = None
+                if end_node:
+                    end_node.make_empty()
+                    end_node = None
+                pass
+            elif options_start_end[user_choice] == "Go back":
+                user_choice = main_menu.show()
+        elif options_main[user_choice] == "Pathfinder algorithms":
+            user_choice = pathfinder_menu.show()
+            if options_pathfinder[user_choice] == "Dijkstra's algorithm":
+                dijkstra(grid, start_node, end_node)
+            elif options_pathfinder[user_choice] == "Go back":
+                user_choice = main_menu.show()
+        elif options_main[user_choice] == "Exit":
+            app_running = False
+    
+    # grid = generate_grid()
+    # reset_grid(grid)
+    
+    # generate_maze_recursive_division(grid, 2, HEIGHT - 2, 2, WIDTH - 2, "horizontal")
+    
+    # start = grid[1][1]
+    # end = grid[-2][-2]
+    # start.make_start()
+    # end.make_end()
+    
+    # dijkstra(grid, start, end)
     
 if __name__ == "__main__":
     main()
