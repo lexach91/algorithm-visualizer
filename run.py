@@ -35,6 +35,8 @@ class Node:
         self.passage = False
         self.distance = float("inf")
         self.previous = None
+        self.manhattan_distance = float("inf")
+        self.total_cost = float("inf")
 
     def __str__(self):
         return self.color
@@ -113,6 +115,8 @@ class Node:
         self.visited = False
         self.passage = False
         self.distance = float("inf")
+        self.manhattan_distance = float("inf")
+        self.total_cost = float("inf")
         self.previous = None
 
 
@@ -353,6 +357,58 @@ def manhattan_distance(node1, node2):
     """
     return abs(node1.row - node2.row) + abs(node1.col - node2.col)
 
+def closest_node(nodes):
+    """
+    Returns the node in the list of nodes that is closest to the end node.
+    """
+    return min(nodes, key=lambda node: node.total_cost)
+
+def a_star(grid, start_node, end_node):
+    """
+    Searches for the shortest path from the start node to the end node using A* algorithm.
+    """
+    path_found = False
+    reset_grid_partially(grid)
+    update_all_neighbors(grid)
+    start_node.distance = 0
+    start_node.manhattan_distance = manhattan_distance(start_node, end_node)
+    start_node.total_cost = start_node.distance + start_node.manhattan_distance  
+    end_node.distance = float("inf")
+    # start_node.make_visited()
+    start_node.previous = None
+    nodes_to_visit = [start_node]
+    while nodes_to_visit:
+        current_node = closest_node(nodes_to_visit)
+        nodes_to_visit.remove(current_node)
+        
+        for neighbor in current_node.neighbors:
+            distance_from_start = current_node.distance + 1
+            manhattan_distance_from_end = manhattan_distance(neighbor, end_node)
+            total_cost = distance_from_start + manhattan_distance_from_end
+            
+            if distance_from_start < neighbor.distance:
+                neighbor.previous = current_node
+                neighbor.distance = distance_from_start
+                neighbor.manhattan_distance = manhattan_distance_from_end
+                neighbor.total_cost = total_cost
+                
+                if neighbor not in nodes_to_visit:
+                    nodes_to_visit.append(neighbor)
+                    if neighbor == end_node:
+                        draw_path(grid, neighbor)
+                        path_found = True
+                        return
+                    neighbor.make_active()
+                    
+        if current_node != start_node:
+            current_node.make_visited()
+            display_grid(grid)
+    if not path_found:
+        print("No path found.")
+    
+    
+            
+
 def main():
     """
     Main function.
@@ -385,6 +441,7 @@ def main():
     ]
     options_pathfinder = [
         "Dijkstra's algorithm",
+        "A* algorithm",
         "Go back"
     ]
     main_menu = TerminalMenu(options_main, title="Main menu")
@@ -488,6 +545,12 @@ def main():
             if options_pathfinder[user_choice] == "Dijkstra's algorithm":
                 if start_node and end_node:
                     dijkstra(grid, start_node, end_node)
+                else:
+                    display_grid(grid)
+                    print("Start and end node must be placed first.")
+            elif options_pathfinder[user_choice] == "A* algorithm":
+                if start_node and end_node:
+                    a_star(grid, start_node, end_node)
                 else:
                     display_grid(grid)
                     print("Start and end node must be placed first.")
