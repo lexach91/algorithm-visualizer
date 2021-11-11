@@ -303,11 +303,14 @@ def draw_path(grid, end_node):
         current_node.make_path()
         current_node = current_node.previous
         display_grid(grid)
+        print("Path found!")
+        
 
 def dijkstra(grid, start_node, end_node):
     """
     Searches for the shortest path from the start node to the end node using Dijkstra's algorithm.
     """
+    path_found = False
     reset_grid_partially(grid)
     update_all_neighbors(grid)
     start_node.distance = 0
@@ -334,13 +337,16 @@ def dijkstra(grid, start_node, end_node):
                     nodes_to_visit.append(neighbor)
                     if neighbor == end_node:
                         draw_path(grid, neighbor)
+                        path_found = True
                         return
                     neighbor.make_active()
                     
         if current_node != start_node:
             current_node.make_visited()
             display_grid(grid)
-            
+    if not path_found:
+        print("No path found.")
+        
 def main():
     """
     Main function.
