@@ -490,6 +490,7 @@ def main():
             user_choice = start_end_menu.show()
             if options_start_end[user_choice] == "Place by default":
                 if pattern_generated:
+                    reset_grid_partially(grid)
                     if start_node:
                         start_node.reset()
                         start_node = None
@@ -506,6 +507,7 @@ def main():
                     print("No pattern generated yet.")
             elif options_start_end[user_choice] == "Place randomly":
                 if pattern_generated:
+                    reset_grid_partially(grid)
                     possible_nodes = []
                     if start_node:
                         start_node.reset()
@@ -528,6 +530,7 @@ def main():
                     print("No pattern generated yet.")
             elif options_start_end[user_choice] == "Place manually":
                 if pattern_generated:
+                    reset_grid_partially(grid)
                     if start_node:
                         start_node.reset()
                         start_node = None
