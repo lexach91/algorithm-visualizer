@@ -76,6 +76,9 @@ class Node:
     def is_passage(self):
         return self.passage
 
+    def is_path(self):
+        return self.color == PATH
+    
     def is_active(self):
         return self.color == ACTIVE
     
@@ -150,7 +153,7 @@ def reset_grid_partially(grid):
     """
     for row in grid:
         for node in row:
-            if node.is_visited() or node.is_active() and not node.is_end() and not node.is_start():
+            if node.is_visited() or node.is_active() or node.is_path() and not node.is_end() and not node.is_start():
                 node.reset()
 
 def display_grid(grid):
@@ -308,6 +311,7 @@ def dijkstra(grid, start_node, end_node):
     reset_grid_partially(grid)
     update_all_neighbors(grid)
     start_node.distance = 0
+    end_node.distance = float("inf")
     # start_node.make_visited()
     start_node.previous = None
     nodes_to_visit = [start_node]
@@ -315,9 +319,9 @@ def dijkstra(grid, start_node, end_node):
     while nodes_to_visit:
         current_node = nodes_to_visit.pop(0)
         
-        if current_node == end_node:
-            draw_path(grid, end_node)
-            return
+        # if current_node == end_node:
+        #     draw_path(grid, end_node)
+        #     return
         
         for neighbor in current_node.neighbors:
             distance_from_start = current_node.distance + 1
@@ -328,6 +332,9 @@ def dijkstra(grid, start_node, end_node):
                 
                 if neighbor not in nodes_to_visit:
                     nodes_to_visit.append(neighbor)
+                    if neighbor == end_node:
+                        draw_path(grid, neighbor)
+                        return
                     neighbor.make_active()
                     
         if current_node != start_node:
@@ -341,6 +348,7 @@ def main():
     grid = generate_grid()
     start_node = None
     end_node = None
+    pattern_generated = False
     
     options_main = [
         "Grid options", 
@@ -381,74 +389,96 @@ def main():
             if options_grid[user_choice] == "Empty grid":
                 reset_grid(grid)
                 display_grid(grid)
+                pattern_generated = True
             elif options_grid[user_choice] == "Random pattern":
                 reset_grid(grid)
                 generate_random_pattern(grid)
                 display_grid(grid)
+                pattern_generated = True
             elif options_grid[user_choice] == "Maze with vertical walls":
                 reset_grid(grid)
                 generate_vertical_maze(grid)
                 display_grid(grid)
+                pattern_generated = True
             elif options_grid[user_choice] == "Maze with horizontal walls":
                 reset_grid(grid)
                 generate_horizontal_maze(grid)
                 display_grid(grid)
+                pattern_generated = True
             elif options_grid[user_choice] == "Maze with spiral pattern":
                 reset_grid(grid)
                 generate_spiral_maze(grid)
                 display_grid(grid)
+                pattern_generated = True
             elif options_grid[user_choice] == "Maze recursive division":
                 reset_grid(grid)
                 generate_maze_recursive_division(grid, 2, HEIGHT - 2, 2, WIDTH - 2, "horizontal")
                 display_grid(grid)
+                pattern_generated = True
             elif options_grid[user_choice] == "Go back":
                 user_choice = main_menu.show()
         elif options_main[user_choice] == "Place start and end node":
             user_choice = start_end_menu.show()
             if options_start_end[user_choice] == "Place by default":
-                if start_node:
-                    start_node.make_empty()
-                    start_node = None
-                if end_node:
-                    end_node.make_empty()
-                    end_node = None
-                start_node = grid[1][1]
-                end_node = grid[HEIGHT - 2][WIDTH - 2]
-                start_node.make_start()
-                end_node.make_end()
-                display_grid(grid)
+                if pattern_generated:
+                    if start_node:
+                        start_node.reset()
+                        start_node = None
+                    if end_node:
+                        end_node.reset()
+                        end_node = None
+                    start_node = grid[1][1]
+                    end_node = grid[HEIGHT - 2][WIDTH - 2]
+                    start_node.make_start()
+                    end_node.make_end()
+                    display_grid(grid)
+                else:
+                    display_grid(grid)
+                    print("No pattern generated yet.")
             elif options_start_end[user_choice] == "Place randomly":
-                possible_nodes = []
-                if start_node:
-                    start_node.make_empty()
-                    start_node = None
-                if end_node:
-                    end_node.make_empty()
-                    end_node = None
-                for row in grid:
-                    for node in row:
-                        if node.is_empty():
-                            possible_nodes.append(node)
-                start_node = random.choice(possible_nodes)
-                possible_nodes.remove(start_node)
-                end_node = random.choice(possible_nodes)
-                start_node.make_start()
-                end_node.make_end()
-                display_grid(grid)
+                if pattern_generated:
+                    possible_nodes = []
+                    if start_node:
+                        start_node.reset()
+                        start_node = None
+                    if end_node:
+                        end_node.reset()
+                        end_node = None
+                    for row in grid:
+                        for node in row:
+                            if node.is_empty():
+                                possible_nodes.append(node)
+                    start_node = random.choice(possible_nodes)
+                    possible_nodes.remove(start_node)
+                    end_node = random.choice(possible_nodes)
+                    start_node.make_start()
+                    end_node.make_end()
+                    display_grid(grid)
+                else:
+                    display_grid(grid)
+                    print("No pattern generated yet.")
             elif options_start_end[user_choice] == "Place manually":
-                if start_node:
-                    start_node.make_empty()
-                    start_node = None
-                if end_node:
-                    end_node.make_empty()
-                    end_node = None
-                pass
+                if pattern_generated:
+                    if start_node:
+                        start_node.reset()
+                        start_node = None
+                    if end_node:
+                        end_node.reset()
+                        end_node = None
+                    pass
+                else:
+                    display_grid(grid)
+                    print("No pattern generated yet.")
             elif options_start_end[user_choice] == "Go back":
                 user_choice = main_menu.show()
         elif options_main[user_choice] == "Pathfinder algorithms":
             user_choice = pathfinder_menu.show()
             if options_pathfinder[user_choice] == "Dijkstra's algorithm":
-                dijkstra(grid, start_node, end_node)
+                if start_node and end_node:
+                    dijkstra(grid, start_node, end_node)
+                else:
+                    display_grid(grid)
+                    print("Start and end node must be placed first.")
             elif options_pathfinder[user_choice] == "Go back":
                 user_choice = main_menu.show()
         elif options_main[user_choice] == "Exit":
