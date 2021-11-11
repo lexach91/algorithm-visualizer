@@ -14,8 +14,8 @@ VISITED = "🟩"
 ACTIVE = "🟨"
 START = "🧐"
 END = "🏁"
-EMPTY = "　"
-# EMPTY = " "
+# EMPTY = "　"
+EMPTY = " "
 
 WIDTH = 35
 HEIGHT = 21
@@ -31,8 +31,6 @@ class Node:
         self.col = col
         self.color = EMPTY
         self.neighbors = []
-        self.visited = False
-        self.passage = False
         self.distance = float("inf")
         self.previous = None
         self.manhattan_distance = float("inf")
@@ -42,9 +40,15 @@ class Node:
         return self.color
 
     def get_position(self):
+        """
+        Returns the position of the node as a tuple
+        """
         return self.row, self.col
 
     def update_neighbors(self, grid):
+        """
+        Updates the neighbors of the current node skipping the walls.
+        """
         self.neighbors = []
         row, col = self.get_position()
         # Node to the top of the current node
@@ -61,59 +65,94 @@ class Node:
             self.neighbors.append(grid[row][col + 1])
 
     def is_end(self):
+        """
+        Returns True if the node is the end node.
+        """
         return self.color == END
 
     def is_start(self):
+        """
+        Returns True if the node is the start node.
+        """
         return self.color == START
 
     def is_wall(self):
+        """
+        Returns True if the node is a wall.
+        """
         return self.color == WALL
 
     def is_empty(self):
+        """
+        Returns True if the node is empty.
+        """
         return self.color == EMPTY
 
     def is_visited(self):
-        return self.visited
-
-    def is_passage(self):
-        return self.passage
+        """
+        Returns True if the node has been visited.
+        """
+        return self.color == VISITED
 
     def is_path(self):
+        """
+        Returns True if the node is a path.
+        """
         return self.color == PATH
     
     def is_active(self):
+        """
+        Returns True if the node is the active node.
+        """
         return self.color == ACTIVE
     
     def make_start(self):
+        """
+        Makes the node the start node.
+        """
         self.color = START
 
     def make_end(self):
+        """
+        Makes the node the end node.
+        """
         self.color = END
 
     def make_wall(self):
+        """
+        Makes the node a wall.
+        """
         self.color = WALL
 
     def make_empty(self):
+        """
+        Makes the node empty.
+        """
         self.color = EMPTY
 
     def make_visited(self):
+        """
+        Makes the node visited.
+        """
         self.color = VISITED
-        self.visited = True
 
     def make_active(self):
+        """
+        Makes the node active.
+        """
         self.color = ACTIVE
 
-    def make_passage(self):
-        self.passage = True
-        self.color = EMPTY
-
     def make_path(self):
+        """
+        Makes the node a path.
+        """
         self.color = PATH
 
     def reset(self):
+        """
+        Resets the node to its initial state.
+        """
         self.color = EMPTY
-        self.visited = False
-        self.passage = False
         self.distance = float("inf")
         self.manhattan_distance = float("inf")
         self.total_cost = float("inf")
@@ -164,9 +203,9 @@ def display_grid(grid):
     """
     Displays the grid in the terminal.
     """
-    print(terminal.move(0, 0) + terminal.clear)
+    print(terminal.home + terminal.clear)
     for row in grid:
-        print("".join(str(node) for node in row))
+        print(" ".join(str(node) for node in row))
     sleep(0.1)
 
 def generate_horizontal_maze(grid):
@@ -319,16 +358,11 @@ def dijkstra(grid, start_node, end_node):
     update_all_neighbors(grid)
     start_node.distance = 0
     end_node.distance = float("inf")
-    # start_node.make_visited()
     start_node.previous = None
     nodes_to_visit = [start_node]
     
     while nodes_to_visit:
-        current_node = nodes_to_visit.pop(0)
-        
-        # if current_node == end_node:
-        #     draw_path(grid, end_node)
-        #     return
+        current_node = nodes_to_visit.pop(0)       
         
         for neighbor in current_node.neighbors:
             distance_from_start = current_node.distance + 1
@@ -374,7 +408,6 @@ def a_star(grid, start_node, end_node):
     start_node.manhattan_distance = manhattan_distance(start_node, end_node)
     start_node.total_cost = start_node.distance + start_node.manhattan_distance  
     end_node.distance = float("inf")
-    # start_node.make_visited()
     start_node.previous = None
     nodes_to_visit = [start_node]
     while nodes_to_visit:
@@ -419,7 +452,7 @@ def place_start_node_manually(grid):
         while not start_node:
             print(terminal.home + terminal.clear)
             for row in grid:
-                print("".join(str(node) for node in row))
+                print(" ".join(str(node) for node in row))
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the start node.")
             
@@ -465,7 +498,7 @@ def place_end_node_manually(grid):
         while not end_node:
             print(terminal.home + terminal.clear)
             for row in grid:
-                print("".join(str(node) for node in row))
+                print(" ".join(str(node) for node in row))
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the end node.")
             
@@ -493,7 +526,7 @@ def place_end_node_manually(grid):
             elif key_pressed.code == terminal.KEY_ENTER:
                 end_node = temp_end
                 return end_node
-            
+
 
 def main():
     """
@@ -647,19 +680,7 @@ def main():
             elif options_pathfinder[user_choice] == "Go back":
                 user_choice = main_menu.show()
         elif options_main[user_choice] == "Exit":
-            app_running = False
-    
-    # grid = generate_grid()
-    # reset_grid(grid)
-    
-    # generate_maze_recursive_division(grid, 2, HEIGHT - 2, 2, WIDTH - 2, "horizontal")
-    
-    # start = grid[1][1]
-    # end = grid[-2][-2]
-    # start.make_start()
-    # end.make_end()
-    
-    # dijkstra(grid, start, end)
+            app_running = False    
     
 if __name__ == "__main__":
     main()
