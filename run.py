@@ -346,7 +346,13 @@ def dijkstra(grid, start_node, end_node):
             display_grid(grid)
     if not path_found:
         print("No path found.")
-        
+
+def manhattan_distance(node1, node2):
+    """
+    Calculates the manhattan distance between two nodes.
+    """
+    return abs(node1.row - node2.row) + abs(node1.col - node2.col)
+
 def main():
     """
     Main function.
