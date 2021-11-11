@@ -406,7 +406,93 @@ def a_star(grid, start_node, end_node):
     if not path_found:
         print("No path found.")
     
-    
+
+def place_start_node_manually(grid):
+    """
+    Allows user to place start and end nodes manually.
+    """
+    print("Place start node.")
+    start_node = None
+    temp_start = grid[1][1]
+    temp_start.make_start()
+    with terminal.cbreak(), terminal.hidden_cursor():
+        while not start_node:
+            print(terminal.home + terminal.clear)
+            for row in grid:
+                print("".join(str(node) for node in row))
+            print("Use ARROW keys to move around the grid.")
+            print("Press ENTER to place the start node.")
+            
+            key_pressed = terminal.inkey(timeout=0.1)
+            if key_pressed.code == terminal.KEY_UP:
+                if temp_start.row > 1 and grid[temp_start.row - 1][temp_start.col].is_empty():
+                    temp_start.make_empty()
+                    temp_start = grid[temp_start.row - 1][temp_start.col]
+                    temp_start.make_start()
+            elif key_pressed.code == terminal.KEY_DOWN:
+                if temp_start.row < HEIGHT - 2 and grid[temp_start.row + 1][temp_start.col].is_empty():
+                    temp_start.make_empty()
+                    temp_start = grid[temp_start.row + 1][temp_start.col]
+                    temp_start.make_start()
+            elif key_pressed.code == terminal.KEY_LEFT:
+                if temp_start.col > 1 and grid[temp_start.row][temp_start.col - 1].is_empty():
+                    temp_start.make_empty()
+                    temp_start = grid[temp_start.row][temp_start.col - 1]
+                    temp_start.make_start()
+            elif key_pressed.code == terminal.KEY_RIGHT:
+                if temp_start.col < WIDTH - 2 and grid[temp_start.row][temp_start.col + 1].is_empty():
+                    temp_start.make_empty()
+                    temp_start = grid[temp_start.row][temp_start.col + 1]
+                    temp_start.make_start()
+            elif key_pressed.code == terminal.KEY_ENTER:
+                start_node = temp_start
+                return start_node
+                
+        
+def place_end_node_manually(grid):
+    """
+    Allows user to place start and end nodes manually.
+    """
+    print("Place start node.")
+    end_node = None
+    temp_end = None
+    for row in grid:
+        for node in row:
+            if node.is_empty():
+                temp_end = node
+    temp_end.make_end()
+    with terminal.cbreak(), terminal.hidden_cursor():
+        while not end_node:
+            print(terminal.home + terminal.clear)
+            for row in grid:
+                print("".join(str(node) for node in row))
+            print("Use ARROW keys to move around the grid.")
+            print("Press ENTER to place the end node.")
+            
+            key_pressed = terminal.inkey(timeout=0.1)
+            if key_pressed.code == terminal.KEY_UP:
+                if temp_end.row > 1 and grid[temp_end.row - 1][temp_end.col].is_empty():
+                    temp_end.make_empty()
+                    temp_end = grid[temp_end.row - 1][temp_end.col]
+                    temp_end.make_end()
+            elif key_pressed.code == terminal.KEY_DOWN:
+                if temp_end.row < HEIGHT - 2 and grid[temp_end.row + 1][temp_end.col].is_empty():
+                    temp_end.make_empty()
+                    temp_end = grid[temp_end.row + 1][temp_end.col]
+                    temp_end.make_end()
+            elif key_pressed.code == terminal.KEY_LEFT:
+                if temp_end.col > 1 and grid[temp_end.row][temp_end.col - 1].is_empty():
+                    temp_end.make_empty()
+                    temp_end = grid[temp_end.row][temp_end.col - 1]
+                    temp_end.make_end()
+            elif key_pressed.code == terminal.KEY_RIGHT:
+                if temp_end.col < WIDTH - 2 and grid[temp_end.row][temp_end.col + 1].is_empty():
+                    temp_end.make_empty()
+                    temp_end = grid[temp_end.row][temp_end.col + 1]
+                    temp_end.make_end()
+            elif key_pressed.code == terminal.KEY_ENTER:
+                end_node = temp_end
+                return end_node
             
 
 def main():
@@ -537,7 +623,8 @@ def main():
                     if end_node:
                         end_node.reset()
                         end_node = None
-                    pass
+                    start_node = place_start_node_manually(grid)
+                    end_node = place_end_node_manually(grid)
                 else:
                     display_grid(grid)
                     print("No pattern generated yet.")
