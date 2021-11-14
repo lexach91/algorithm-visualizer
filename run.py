@@ -17,8 +17,8 @@ END = "🏁"
 # EMPTY = "　"
 EMPTY = " "
 
-WIDTH = 35
-HEIGHT = 21
+WIDTH = 33
+HEIGHT = 19
 
 
 class Node:
@@ -213,10 +213,11 @@ def display_grid(grid):
     """
     Displays the grid in the terminal.
     """
-    print(terminal.home + terminal.clear)
-    for row in grid:
-        print(" ".join(str(node) for node in row))
-    sleep(0.1)
+    with terminal.hidden_cursor():
+        print(terminal.home + terminal.clear)
+        for row in grid:
+            print(" ".join(str(node) for node in row))
+        sleep(0.15)
 
 
 def generate_horizontal_maze(grid):
