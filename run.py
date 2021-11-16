@@ -41,7 +41,7 @@ class Node:
 
     def get_position(self):
         """
-        Returns the position of the node as a tuple
+        Returns the position of the node as a tuple.
         """
         return self.row, self.col
 
@@ -49,7 +49,7 @@ class Node:
         """
         Updates the neighbors of the current node skipping the walls.
         """
-        self.neighbors = []
+        self.neighbors = [] # reset the neighbors list
         row, col = self.get_position()
         # Node to the top of the current node
         if row > 0 and not grid[row - 1][col].is_wall():
@@ -161,7 +161,7 @@ class Node:
 
 def generate_grid():
     """
-    Generates and returns a grid of nodes.
+    Generates and returns a grid of nodes as a 2D numpy array.
     """
     return np.array([[Node(row, col) for col in range(WIDTH)] for row in range(HEIGHT)])
 
@@ -217,7 +217,7 @@ def display_grid(grid):
         print(terminal.home + terminal.clear)
         for row in grid:
             print("".join(str(node) for node in row))
-        sleep(0.1)
+        sleep(0.15)
 
 def display_prepared_grid(start_node, end_node, grid):
     """
@@ -256,36 +256,36 @@ def generate_spiral_maze(grid):
     """
     Generates a maze in a form of a spiral
     """
-    left = 1
-    right = WIDTH - 2
-    top = 2
-    bottom = HEIGHT - 2
+    left = 1 # Start from the left border
+    right = WIDTH - 2 # Finish two columns from the right border
+    top = 2 # Start two rows from the top
+    bottom = HEIGHT - 2 # Finish two rows from the bottom
 
     while left < right and top < bottom:
         if left > right:
             break
-        for i in range(left, right):
+        for i in range(left, right): # Drawing wall from left to right
             grid[top][i].make_wall()
             display_grid(grid)
-        top += 2
+        top += 2 # Moving to the next row down leaving a gap
         if top > bottom:
             break
-        for i in range(top - 1, bottom):
+        for i in range(top - 1, bottom): # Drawing wall from top to bottom
             grid[i][right - 1].make_wall()
             display_grid(grid)
-        right -= 2
+        right -= 2 # Moving to the next column to the left leaving a gap
         if right < left:
             break
-        for i in range(right, left, -1):
+        for i in range(right, left, -1): # Drawing wall from right to left
             grid[bottom - 1][i].make_wall()
             display_grid(grid)
-        bottom -= 2
+        bottom -= 2 # Moving to the next row up leaving a gap
         if bottom < top:
             break
-        for i in range(bottom, top - 1, -1):
+        for i in range(bottom, top - 1, -1): # Drawing wall from bottom to top
             grid[i][left + 1].make_wall()
             display_grid(grid)
-        left += 2
+        left += 2 # Moving to the next column to the right leaving a gap
 
 
 def generate_random_pattern(grid):
@@ -294,7 +294,7 @@ def generate_random_pattern(grid):
     """
     for row in range(1, HEIGHT):
         for col in range(1, WIDTH):
-            if random.random() < 0.14:
+            if random.random() < 0.14: # 0.14 is the probability of a barrier
                 grid[row][col].make_wall()
         display_grid(grid)
 
@@ -305,13 +305,17 @@ def generate_maze_recursive_division(
     """
     Generates a maze using recursive division algorithm.
     """
-    if row_end - row_start < 2 and col_end - col_start < 2:
+    if row_end - row_start < 2 and col_end - col_start < 2: # Stop condition
         return
-
+    # Horizontal division
     if orientation == "horizontal":
+        # Adding every second row to the list
         possible_rows = list(range(row_start, row_end + 1, 2))
+        # Adding every second column to the list
         possible_cols = list(range(col_start - 1, col_end + 2, 2))
+        # Randomly choosing a row for a wall
         current_row = random.choice(possible_rows)
+        # Randomly choosing a column for a passage
         col_to_skip = random.choice(possible_cols)
         for col in range(col_start - 1, col_end + 2):
             grid[current_row][col].make_wall()
@@ -319,29 +323,43 @@ def generate_maze_recursive_division(
                 grid[current_row][col].make_empty()
                 continue
             display_grid(grid)
-
+        # Checking upper and lower parts of the grid 
+        # if we need to divide it horizontally or vertically
+        # and recursively calling the function
+        
+        # If height of the upper part is greater than width, 
+        # we divide horizontally
         if current_row - 2 - row_start > col_end - col_start:
             generate_maze_recursive_division(
                 grid, row_start, current_row - 2, col_start, col_end, "horizontal"
             )
+        # If width of the upper part is greater than height, 
+        # we divide vertically
         else:
             generate_maze_recursive_division(
                 grid, row_start, current_row - 2, col_start, col_end, "vertical"
             )
-
+        # If height of the lower part is greater than width,
+        # we divide horizontally
         if row_end - current_row - 2 > col_end - col_start:
             generate_maze_recursive_division(
                 grid, current_row + 2, row_end, col_start, col_end, "horizontal"
             )
+        # If width of the lower part is greater than height,
+        # we divide vertically    
         else:
             generate_maze_recursive_division(
                 grid, current_row + 2, row_end, col_start, col_end, "vertical"
             )
-
+    # Vertical division
     else:
+        # Adding every second row to the list
         possible_rows = list(range(row_start - 1, row_end + 2, 2))
+        # Adding every second column to the list
         possible_cols = list(range(col_start, col_end + 1, 2))
+        # Randomly choosing a row for a passage
         row_to_skip = random.choice(possible_rows)
+        # Randomly choosing a column for a wall
         current_col = random.choice(possible_cols)
         for row in range(row_start - 1, row_end + 2):
             grid[row][current_col].make_wall()
@@ -349,20 +367,30 @@ def generate_maze_recursive_division(
                 grid[row][current_col].make_empty()
                 continue
             display_grid(grid)
-
+        # Checking left and right parts of the grid
+        # if we need to divide it horizontally or vertically
+        # and recursively calling the function
+        
+        # If height of the left part is greater than width,
+        # we divide horizontally
         if row_end - row_start > current_col - 2 - col_start:
             generate_maze_recursive_division(
                 grid, row_start, row_end, col_start, current_col - 2, "horizontal"
             )
+        # If width of the left part is greater than height,
+        # we divide vertically    
         else:
             generate_maze_recursive_division(
                 grid, row_start, row_end, col_start, current_col - 2, "vertical"
             )
-
+        # If height of the right part is greater than width,
+        # we divide horizontally
         if row_end - row_start > col_end - current_col - 2:
             generate_maze_recursive_division(
                 grid, row_start, row_end, current_col + 2, col_end, "horizontal"
             )
+        # If width of the right part is greater than height,
+        # we divide vertically
         else:
             generate_maze_recursive_division(
                 grid, row_start, row_end, current_col + 2, col_end, "vertical"
@@ -374,13 +402,18 @@ def draw_path(grid, end_node):
     Draws path from the end node to the start node on the grid.
     """
     current_node = end_node
+    # Keep calling the previous node until we reach the start node
     while current_node.previous:
+        # Skipping the end node
         if current_node == end_node:
             end_node.make_end()
             current_node = current_node.previous
             continue
+        # Drawing the path from current node to the previous node
         current_node.make_path()
+        # Changing the current node to the previous node
         current_node = current_node.previous
+        # Displaying the grid every iteration to animate the process
         display_grid(grid)
         print("Path found!")
 
@@ -389,37 +422,61 @@ def dijkstra(grid, start_node, end_node):
     """
     Searches for the shortest path from the start node to the end node using Dijkstra's algorithm.
     """
+    # Flag to check if the path was found
     path_found = False
+    # Resetting the grid from previous searches
     reset_grid_partially(grid)
+    # Updating neighbors of all nodes
     update_all_neighbors(grid)
+    # Setting distance of the start node to 0
     start_node.distance = 0
+    # Resetting the distance of the end node to infinity
     end_node.distance = float("inf")
+    # Setting the previous node of the start node to None
     start_node.previous = None
+    # Creating a list of nodes we need to visit
+    # and placing the start node in it
     nodes_to_visit = [start_node]
 
+    # While we still have nodes to visit
     while nodes_to_visit:
+        # Choosing the first node in the list as the current node
+        # and removing it from the list
         current_node = nodes_to_visit.pop(0)
 
         for neighbor in current_node.neighbors:
+            # Creating a variable for the distance from the start node
+            # and setting it to the distance of the current node + 1 
             distance_from_start = current_node.distance + 1
-
+            # If the distance is less than the distance of the neighbor
             if distance_from_start < neighbor.distance:
+                # Setting current node as the previous node of the neighbor
                 neighbor.previous = current_node
+                # Setting the distance of the neighbor
+                # to the distance from the start node
                 neighbor.distance = distance_from_start
-
                 if neighbor not in nodes_to_visit:
+                    # Adding the neighbor to the list of nodes to visit
                     nodes_to_visit.append(neighbor)
                     if neighbor == end_node:
+                        # If the neighbor is the end node,
+                        # we found the path and we call the function to draw it
                         draw_path(grid, neighbor)
                         path_found = True
-                        return
+                        return # Empty return statement to exit the function
+                    # If the neighbor is not the end node,
+                    # we color it as ACTIVE
                     neighbor.make_active()
 
         if current_node != start_node:
+            # After visiting the node, we color it as VISITED
             current_node.make_visited()
+            # Displaying the grid every iteration to animate the process
             display_grid(grid)
     if not path_found:
-        print("No path found.")
+        # If after the loop the path was not found,
+        # we let the user know about it
+        print("No path found. The end or the start node is blocked.")
 
 
 def manhattan_distance(node1, node2):
