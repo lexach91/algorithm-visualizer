@@ -216,7 +216,7 @@ def display_grid(grid):
     with terminal.hidden_cursor():
         print(terminal.home + terminal.clear)
         for row in grid:
-            print("".join(str(node) for node in row))
+            print(" ".join(str(node) for node in row))
         sleep(0.15)
 
 def display_prepared_grid(start_node, end_node, grid):
@@ -572,7 +572,7 @@ def place_start_node_manually(grid):
         while not start_node:
             print(terminal.home + terminal.clear)
             for row in grid:
-                print("".join(str(node) for node in row))
+                print(" ".join(str(node) for node in row))
             print("Place start node.")            
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the start node.")
@@ -631,7 +631,7 @@ def place_end_node_manually(grid):
         while not end_node:
             print(terminal.home + terminal.clear)
             for row in grid:
-                print("".join(str(node) for node in row))
+                print(" ".join(str(node) for node in row))
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the end node.")
 
