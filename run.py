@@ -497,50 +497,74 @@ def a_star(grid, start_node, end_node):
     """
     Searches for the shortest path from the start node to the end node using A* algorithm.
     """
+    # Flag to check if the path was found
     path_found = False
+    # Resetting the grid from previous searches
     reset_grid_partially(grid)
+    # Updating neighbors of all nodes
     update_all_neighbors(grid)
+    # Setting distance of the start node to 0
     start_node.distance = 0
+    # Calculating the manhattan distance from the start node to the end node
     start_node.manhattan_distance = manhattan_distance(start_node, end_node)
+    # Setting the total cost of the start node 
+    # to sum of its distance and manhattan distance
     start_node.total_cost = start_node.distance + start_node.manhattan_distance
+    # Resetting the distance of the end node to infinity    
     end_node.distance = float("inf")
+    # Setting the previous node of the start node to None
     start_node.previous = None
+    # Creating a list of nodes we need to visit
     nodes_to_visit = [start_node]
+    # While we still have nodes to visit
     while nodes_to_visit:
+        # Choosing the node with minimal total cost as the current node
         current_node = closest_node(nodes_to_visit)
+        # and removing it from the list
         nodes_to_visit.remove(current_node)
 
         for neighbor in current_node.neighbors:
+            # Creating variables for the distance from the start node,
+            # manhattan distance and total cost
             distance_from_start = current_node.distance + 1
             manhattan_distance_from_end = manhattan_distance(neighbor, end_node)
             total_cost = distance_from_start + manhattan_distance_from_end
-
+            # If the distance is less than the distance of the neighbor
             if distance_from_start < neighbor.distance:
+                # Setting current node as the previous node of the neighbor
                 neighbor.previous = current_node
+                # Setting the distance, manhattan distance
+                # and total cost of the neighbor
                 neighbor.distance = distance_from_start
                 neighbor.manhattan_distance = manhattan_distance_from_end
                 neighbor.total_cost = total_cost
-
                 if neighbor not in nodes_to_visit:
+                    # Adding the neighbor to the list of nodes to visit
                     nodes_to_visit.append(neighbor)
                     if neighbor == end_node:
+                        # If the neighbor is the end node,
+                        # we found the path and we call the function to draw it
                         draw_path(grid, neighbor)
                         path_found = True
                         return
+                    # If the neighbor is not the end node,
+                    # we color it as ACTIVE
                     neighbor.make_active()
 
         if current_node != start_node:
+            # After visiting the node, we color it as VISITED
             current_node.make_visited()
+            # Displaying the grid every iteration to animate the process
             display_grid(grid)
     if not path_found:
-        print("No path found.")
-
+        # If after the loop the path was not found,
+        # we let the user know about it
+        print("No path found. The end or the start node is blocked.")
 
 def place_start_node_manually(grid):
     """
     Allows user to place start node on the grid manually.
     """
-    print("Place start node.")
     start_node = None
     temp_start = grid[1][1]
     temp_start.make_start()
@@ -549,6 +573,7 @@ def place_start_node_manually(grid):
             print(terminal.home + terminal.clear)
             for row in grid:
                 print("".join(str(node) for node in row))
+            print("Place start node.")            
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the start node.")
 
