@@ -1,6 +1,6 @@
-import random
 from time import sleep
 import numpy as np
+import random
 from blessed import Terminal, terminal
 from simple_term_menu import TerminalMenu
 
@@ -17,7 +17,7 @@ END = "🏁"
 # EMPTY = "　"
 EMPTY = " "
 
-WIDTH = 33
+WIDTH = 25
 HEIGHT = 19
 
 
@@ -30,8 +30,8 @@ class Node:
         self.row = row
         self.col = col
         self.color = EMPTY
-        self.neighbors = []
-        self.distance = float("inf")
+        self.neighbors = [] 
+        self.distance = float("inf") 
         self.previous = None
         self.manhattan_distance = float("inf")
         self.total_cost = float("inf")
@@ -216,9 +216,16 @@ def display_grid(grid):
     with terminal.hidden_cursor():
         print(terminal.home + terminal.clear)
         for row in grid:
-            print(" ".join(str(node) for node in row))
-        sleep(0.15)
+            print("".join(str(node) for node in row))
+        sleep(0.1)
 
+def display_prepared_grid(start_node, end_node, grid):
+    """
+    Places the start and end nodes on the grid and displays it.
+    """
+    start_node.make_start()
+    end_node.make_end()
+    display_grid(grid)
 
 def generate_horizontal_maze(grid):
     """
@@ -424,7 +431,7 @@ def manhattan_distance(node1, node2):
 
 def closest_node(nodes):
     """
-    Returns the node in the list of nodes that is closest to the end node.
+    Returns the node in the list of nodes with minimal total cost.
     """
     return min(nodes, key=lambda node: node.total_cost)
 
@@ -474,7 +481,7 @@ def a_star(grid, start_node, end_node):
 
 def place_start_node_manually(grid):
     """
-    Allows user to place start and end nodes manually.
+    Allows user to place start node on the grid manually.
     """
     print("Place start node.")
     start_node = None
@@ -484,7 +491,7 @@ def place_start_node_manually(grid):
         while not start_node:
             print(terminal.home + terminal.clear)
             for row in grid:
-                print(" ".join(str(node) for node in row))
+                print("".join(str(node) for node in row))
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the start node.")
 
@@ -528,7 +535,7 @@ def place_start_node_manually(grid):
 
 def place_end_node_manually(grid):
     """
-    Allows user to place start and end nodes manually.
+    Allows user to place end node on the grid manually.
     """
     print("Place start node.")
     end_node = None
@@ -542,7 +549,7 @@ def place_end_node_manually(grid):
         while not end_node:
             print(terminal.home + terminal.clear)
             for row in grid:
-                print(" ".join(str(node) for node in row))
+                print("".join(str(node) for node in row))
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the end node.")
 
@@ -609,6 +616,7 @@ def main():
         "Go back",
     ]
     options_pathfinder = ["Dijkstra's algorithm", "A* algorithm", "Go back"]
+
     main_menu = TerminalMenu(options_main, title="Main menu")
     grid_menu = TerminalMenu(options_grid, title="Grid menu")
     start_end_menu = TerminalMenu(options_start_end, title="Start and end node menu")
@@ -666,9 +674,7 @@ def main():
                         end_node = None
                     start_node = grid[1][1]
                     end_node = grid[HEIGHT - 2][WIDTH - 2]
-                    start_node.make_start()
-                    end_node.make_end()
-                    display_grid(grid)
+                    display_prepared_grid(start_node, end_node, grid)
                 else:
                     display_grid(grid)
                     print("No pattern generated yet.")
@@ -689,9 +695,7 @@ def main():
                     start_node = random.choice(possible_nodes)
                     possible_nodes.remove(start_node)
                     end_node = random.choice(possible_nodes)
-                    start_node.make_start()
-                    end_node.make_end()
-                    display_grid(grid)
+                    display_prepared_grid(start_node, end_node, grid)
                 else:
                     display_grid(grid)
                     print("No pattern generated yet.")
@@ -713,22 +717,27 @@ def main():
                 user_choice = main_menu.show()
         elif options_main[user_choice] == "Pathfinder algorithms":
             user_choice = pathfinder_menu.show()
-            if options_pathfinder[user_choice] == "Dijkstra's algorithm":
-                if start_node and end_node:
-                    dijkstra(grid, start_node, end_node)
-                else:
-                    display_grid(grid)
-                    print("Start and end node must be placed first.")
+            if (
+                options_pathfinder[user_choice] == "Dijkstra's algorithm"
+                and start_node
+                and end_node
+            ):
+                dijkstra(grid, start_node, end_node)
+            elif (
+                options_pathfinder[user_choice] == "Dijkstra's algorithm"
+                or options_pathfinder[user_choice] == "A* algorithm"
+                and (not start_node or not end_node)
+            ):
+                display_grid(grid)
+                print("Start and end node must be placed first.")
             elif options_pathfinder[user_choice] == "A* algorithm":
-                if start_node and end_node:
-                    a_star(grid, start_node, end_node)
-                else:
-                    display_grid(grid)
-                    print("Start and end node must be placed first.")
+                a_star(grid, start_node, end_node)
             elif options_pathfinder[user_choice] == "Go back":
                 user_choice = main_menu.show()
         elif options_main[user_choice] == "Exit":
             app_running = False
+
+
 
 
 if __name__ == "__main__":
