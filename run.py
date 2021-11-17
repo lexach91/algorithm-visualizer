@@ -33,6 +33,7 @@ class Node:
         self.neighbors = [] 
         self.distance = float("inf") 
         self.previous = None
+        self.next = None
         self.manhattan_distance = float("inf")
         self.total_cost = float("inf")
 
@@ -157,6 +158,7 @@ class Node:
         self.manhattan_distance = float("inf")
         self.total_cost = float("inf")
         self.previous = None
+        self.next = None
 
 
 def generate_grid():
@@ -421,13 +423,18 @@ def draw_path(grid, end_node):
 def dijkstra(grid, start_node, end_node):
     """
     Searches for the shortest path from the start node to the end node using Dijkstra's algorithm.
-    """
+    """    
     # Flag to check if the path was found
     path_found = False
     # Resetting the grid from previous searches
     reset_grid_partially(grid)
     # Updating neighbors of all nodes
     update_all_neighbors(grid)
+    if start_node in end_node.neighbors:
+        print(terminal.home + terminal.clear)
+        display_grid(grid)
+        print("The start and the end node are neighbors!")
+        return
     # Setting distance of the start node to 0
     start_node.distance = 0
     # Resetting the distance of the end node to infinity
@@ -496,13 +503,18 @@ def closest_node(nodes):
 def a_star(grid, start_node, end_node):
     """
     Searches for the shortest path from the start node to the end node using A* algorithm.
-    """
+    """    
     # Flag to check if the path was found
     path_found = False
     # Resetting the grid from previous searches
     reset_grid_partially(grid)
     # Updating neighbors of all nodes
     update_all_neighbors(grid)
+    if start_node in end_node.neighbors:
+        print(terminal.home + terminal.clear)
+        display_grid(grid)
+        print("The start and the end node are neighbors!")
+        return
     # Setting distance of the start node to 0
     start_node.distance = 0
     # Calculating the manhattan distance from the start node to the end node
@@ -560,6 +572,88 @@ def a_star(grid, start_node, end_node):
         # If after the loop the path was not found,
         # we let the user know about it
         print("No path found. The end or the start node is blocked.")
+
+def draw_path_bidirectional(grid, intersection_node):
+    """
+    Draws the path from the intersection node to the start and end nodes simultaneously.
+    """
+    intersection_node.make_path()
+    forward = intersection_node.previous
+    backward = intersection_node.next
+    drawing = True
+    while drawing:
+        if forward.previous:
+            forward.make_path()
+            forward = forward.previous
+        if backward.next:
+            backward.make_path()
+            backward = backward.next
+        if not forward.previous and not backward.next:
+            drawing = False
+        display_grid(grid)
+
+def bidirectional_breadth_first_search(grid, start_node, end_node):
+    """
+    Searches for the shortest path from the start node to the end node
+    using bidirectional breadth-first search algorithm.
+    """    
+    path_found = False
+    reset_grid_partially(grid)
+    update_all_neighbors(grid)
+    if start_node in end_node.neighbors:
+        print(terminal.home + terminal.clear)
+        display_grid(grid)
+        print("The start and the end node are neighbors!")
+        return
+    start_node.distance = 0
+    end_node.distance = 0
+    start_node.previous = None
+    start_node.next = None
+    end_node.previous = None
+    end_node.next = None
+    nodes_to_visit = [start_node]
+    nodes_to_visit_reverse = [end_node]
+    while nodes_to_visit and nodes_to_visit_reverse:
+        current_node_forward = nodes_to_visit.pop(0)
+        current_node_reverse = nodes_to_visit_reverse.pop(0)
+        
+        for neighbor in current_node_forward.neighbors:
+            distance_from_start = current_node_forward.distance + 1
+            if neighbor.next:
+                    neighbor.previous = current_node_forward
+                    current_node_forward.next = neighbor
+                    draw_path_bidirectional(grid, neighbor)
+                    return
+            if distance_from_start < neighbor.distance:
+                neighbor.previous = current_node_forward
+                neighbor.distance = distance_from_start
+                if neighbor not in nodes_to_visit:
+                    nodes_to_visit.append(neighbor)                    
+                    neighbor.make_active()
+                
+        for neighbor in current_node_reverse.neighbors:
+            distance_from_end = current_node_reverse.distance + 1
+            if neighbor.previous:
+                    neighbor.next = current_node_reverse
+                    current_node_reverse.previous = neighbor
+                    draw_path_bidirectional(grid, neighbor)
+                    return
+            if distance_from_end < neighbor.distance:
+                neighbor.next = current_node_reverse
+                neighbor.distance = distance_from_end
+                if neighbor not in nodes_to_visit_reverse:
+                    nodes_to_visit_reverse.append(neighbor)                    
+                    neighbor.make_active()
+                
+        
+        if current_node_forward != start_node:
+            current_node_forward.make_visited()
+        if current_node_reverse != end_node:
+            current_node_reverse.make_visited()
+        display_grid(grid)
+    if not path_found:
+        print("No path found. The end or the start node is blocked.")
+        
 
 def place_start_node_manually(grid):
     """
@@ -619,7 +713,6 @@ def place_end_node_manually(grid):
     """
     Allows user to place end node on the grid manually.
     """
-    print("Place start node.")
     end_node = None
     temp_end = None
     for row in grid:
@@ -632,6 +725,7 @@ def place_end_node_manually(grid):
             print(terminal.home + terminal.clear)
             for row in grid:
                 print(" ".join(str(node) for node in row))
+            print("Place start node.")
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the end node.")
 
@@ -697,7 +791,12 @@ def main():
         "Place manually",
         "Go back",
     ]
-    options_pathfinder = ["Dijkstra's algorithm", "A* algorithm", "Go back"]
+    options_pathfinder = [
+        "Dijkstra's algorithm",
+        "A* algorithm",
+        "Bi-directional BFS",
+        "Go back",
+    ]
 
     main_menu = TerminalMenu(options_main, title="Main menu")
     grid_menu = TerminalMenu(options_grid, title="Grid menu")
@@ -745,75 +844,61 @@ def main():
                 user_choice = main_menu.show()
         elif options_main[user_choice] == "Place start and end node":
             user_choice = start_end_menu.show()
-            if options_start_end[user_choice] == "Place by default":
-                if pattern_generated:
-                    reset_grid_partially(grid)
-                    if start_node:
-                        start_node.reset()
-                        start_node = None
-                    if end_node:
-                        end_node.reset()
-                        end_node = None
-                    start_node = grid[1][1]
-                    end_node = grid[HEIGHT - 2][WIDTH - 2]
-                    display_prepared_grid(start_node, end_node, grid)
-                else:
-                    display_grid(grid)
-                    print("No pattern generated yet.")
+            if options_start_end[user_choice] != "Go back" and not pattern_generated:
+                display_grid(grid)
+                print("No pattern generated yet.")
+            elif options_start_end[user_choice] == "Place by default":                
+                reset_grid_partially(grid)
+                if start_node:
+                    start_node.reset()
+                    start_node = None
+                if end_node:
+                    end_node.reset()
+                    end_node = None
+                start_node = grid[1][1]
+                end_node = grid[HEIGHT - 2][WIDTH - 2]
+                display_prepared_grid(start_node, end_node, grid)
             elif options_start_end[user_choice] == "Place randomly":
-                if pattern_generated:
-                    reset_grid_partially(grid)
-                    possible_nodes = []
-                    if start_node:
-                        start_node.reset()
-                        start_node = None
-                    if end_node:
-                        end_node.reset()
-                        end_node = None
-                    for row in grid:
-                        for node in row:
-                            if node.is_empty():
-                                possible_nodes.append(node)
-                    start_node = random.choice(possible_nodes)
-                    possible_nodes.remove(start_node)
-                    end_node = random.choice(possible_nodes)
-                    display_prepared_grid(start_node, end_node, grid)
-                else:
-                    display_grid(grid)
-                    print("No pattern generated yet.")
+                reset_grid_partially(grid)
+                possible_nodes = []
+                if start_node:
+                    start_node.reset()
+                    start_node = None
+                if end_node:
+                    end_node.reset()
+                    end_node = None
+                for row in grid:
+                    for node in row:
+                        if node.is_empty():
+                            possible_nodes.append(node)
+                start_node = random.choice(possible_nodes)
+                possible_nodes.remove(start_node)
+                end_node = random.choice(possible_nodes)
+                display_prepared_grid(start_node, end_node, grid)
             elif options_start_end[user_choice] == "Place manually":
-                if pattern_generated:
-                    reset_grid_partially(grid)
-                    if start_node:
-                        start_node.reset()
-                        start_node = None
-                    if end_node:
-                        end_node.reset()
-                        end_node = None
-                    start_node = place_start_node_manually(grid)
-                    end_node = place_end_node_manually(grid)
-                else:
-                    display_grid(grid)
-                    print("No pattern generated yet.")
+                reset_grid_partially(grid)
+                if start_node:
+                    start_node.reset()
+                    start_node = None
+                if end_node:
+                    end_node.reset()
+                    end_node = None
+                start_node = place_start_node_manually(grid)
+                end_node = place_end_node_manually(grid)
+                display_prepared_grid(start_node, end_node, grid)
             elif options_start_end[user_choice] == "Go back":
                 user_choice = main_menu.show()
         elif options_main[user_choice] == "Pathfinder algorithms":
             user_choice = pathfinder_menu.show()
-            if (
-                options_pathfinder[user_choice] == "Dijkstra's algorithm"
-                and start_node
-                and end_node
-            ):
-                dijkstra(grid, start_node, end_node)
-            elif (
-                options_pathfinder[user_choice] == "Dijkstra's algorithm"
-                or options_pathfinder[user_choice] == "A* algorithm"
-                and (not start_node or not end_node)
-            ):
+            if options_pathfinder[user_choice] != "Go back" and (not start_node or not end_node):
                 display_grid(grid)
-                print("Start and end node must be placed first.")
+                print("Start and end node not placed yet.")
+            elif options_pathfinder[user_choice] == "Dijkstra's algorithm":
+                dijkstra(grid, start_node, end_node)
             elif options_pathfinder[user_choice] == "A* algorithm":
                 a_star(grid, start_node, end_node)
+            elif options_pathfinder[user_choice] == "Bi-directional BFS":
+                bidirectional_breadth_first_search(grid, start_node, end_node)
             elif options_pathfinder[user_choice] == "Go back":
                 user_choice = main_menu.show()
         elif options_main[user_choice] == "Exit":
