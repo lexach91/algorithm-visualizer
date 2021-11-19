@@ -7,7 +7,7 @@ from simple_term_menu import TerminalMenu
 # create a Terminal instance
 terminal = Terminal()
 
-# Constants for the grid colors and dimensions
+# Constants for the grid colors and dimensions of the grid
 WALL = "⬜️"
 PATH = "🟦"
 VISITED = "🟩"
@@ -27,17 +27,31 @@ class Node:
     """
 
     def __init__(self, row, col):
+        # Row and column position of the node
         self.row = row
         self.col = col
+        # Color (state) of the node. Node is empty by default.
         self.color = EMPTY
-        self.neighbors = [] 
-        self.distance = float("inf") 
+        # Empty list to store neighbors of the node in the future.
+        self.neighbors = []
+        # Distance from the start node to the current node. 
+        # Infinity by default. Used in all pathfinding algorithms.
+        self.distance = float("inf")
+        # Variable to store the previous node in the path.
+        # Used in all pathfinding algorithms.
         self.previous = None
+        # Variable to store the next node in the path.
+        # Used in bidirectional BFS.
         self.next = None
+        # Variable to store the manhattan distance to the end node.
+        # Used in A* algorithm.
         self.manhattan_distance = float("inf")
+        # Variable to store the total cost of traveling through this node.
+        # Used in A* algorithm.
         self.total_cost = float("inf")
 
     def __str__(self):
+        # Need this method to print the node.
         return self.color
 
     def get_position(self):
@@ -197,7 +211,7 @@ def reset_grid(grid):
 
 def reset_grid_partially(grid):
     """
-    Resets visited nodes on the grid before running another algorithm.
+    Resets visited and active nodes on the grid before running another algorithm.
     """
     for row in grid:
         for node in row:
@@ -249,6 +263,7 @@ def generate_vertical_maze(grid):
     for col in range(2, WIDTH - 2, 2):
         skip = random.randint(1, HEIGHT - 2)
         for i in range(1, HEIGHT - 1):
+            # Using numpy slicing here to easily get the column.    
             grid[:, col][i].make_wall()
             display_grid(grid)
         grid[:, col][skip].reset()
@@ -422,7 +437,8 @@ def draw_path(grid, end_node):
 
 def dijkstra(grid, start_node, end_node):
     """
-    Searches for the shortest path from the start node to the end node using Dijkstra's algorithm.
+    Searches for the shortest path from the start node to the end node
+    using Dijkstra's algorithm.
     """    
     # Flag to check if the path was found
     path_found = False
@@ -430,6 +446,7 @@ def dijkstra(grid, start_node, end_node):
     reset_grid_partially(grid)
     # Updating neighbors of all nodes
     update_all_neighbors(grid)
+    # Checking if the start node and the end node are neighbors
     if start_node in end_node.neighbors:
         print(terminal.home + terminal.clear)
         display_grid(grid)
@@ -497,19 +514,22 @@ def closest_node(nodes):
     """
     Returns the node in the list of nodes with minimal total cost.
     """
+    # Using lambda function to easily access the total cost of the node.
     return min(nodes, key=lambda node: node.total_cost)
 
 
 def a_star(grid, start_node, end_node):
     """
-    Searches for the shortest path from the start node to the end node using A* algorithm.
-    """    
+    Searches for the shortest path from the start node to the end node
+    using A* algorithm.
+    """
     # Flag to check if the path was found
     path_found = False
     # Resetting the grid from previous searches
     reset_grid_partially(grid)
     # Updating neighbors of all nodes
     update_all_neighbors(grid)
+    # Checking if the start node and the end node are neighbors
     if start_node in end_node.neighbors:
         print(terminal.home + terminal.clear)
         display_grid(grid)
@@ -575,82 +595,142 @@ def a_star(grid, start_node, end_node):
 
 def draw_path_bidirectional(grid, intersection_node):
     """
-    Draws the path from the intersection node to the start and end nodes simultaneously.
+    Draws the path from the intersection node
+    to the start and end nodes simultaneously.
     """
+    # First we make the intersection node the path.
     intersection_node.make_path()
+    # Accessing the previous node of the intersection node.
     forward = intersection_node.previous
+    # Accessing the next node of the intersection node.
     backward = intersection_node.next
+    # Flag to continue drawing the path
     drawing = True
     while drawing:
+        # Check if the forward node has a previous node
         if forward.previous:
+            # If so, we make it the path
             forward.make_path()
+            # And we access the previous node of the forward node
             forward = forward.previous
+        # Check if the backward node has a next node
         if backward.next:
+            # If so, we make it the path
             backward.make_path()
+            # And we access the next node of the backward node
             backward = backward.next
+        # We stop if the forward node has no previous node
+        # and the backward node has no next node
         if not forward.previous and not backward.next:
             drawing = False
+        # Displaying the grid every iteration to animate the process
         display_grid(grid)
 
 def bidirectional_breadth_first_search(grid, start_node, end_node):
     """
     Searches for the shortest path from the start node to the end node
     using bidirectional breadth-first search algorithm.
-    """    
+    """
+    # Flag to check if the path was found
     path_found = False
+    # Resetting the grid from previous searches
     reset_grid_partially(grid)
+    # Updating neighbors of all nodes
     update_all_neighbors(grid)
+    # Checking if the start node and the end node are neighbors
     if start_node in end_node.neighbors:
         print(terminal.home + terminal.clear)
         display_grid(grid)
         print("The start and the end node are neighbors!")
         return
+    # Setting distance of the start node to 0
     start_node.distance = 0
+    # Setting distance of the end node to 0
     end_node.distance = 0
+    # Resetting the previous and next nodes
+    # of the start node and the end node
     start_node.previous = None
     start_node.next = None
     end_node.previous = None
     end_node.next = None
+    # Creating two lists of nodes we need to visit from both directions
     nodes_to_visit = [start_node]
     nodes_to_visit_reverse = [end_node]
     while nodes_to_visit and nodes_to_visit_reverse:
+        # Creating variables for current nodes from both lists
         current_node_forward = nodes_to_visit.pop(0)
         current_node_reverse = nodes_to_visit_reverse.pop(0)
         
         for neighbor in current_node_forward.neighbors:
+            # Creating variable for the distance from the start node
             distance_from_start = current_node_forward.distance + 1
             if neighbor.next:
-                    neighbor.previous = current_node_forward
-                    current_node_forward.next = neighbor
-                    draw_path_bidirectional(grid, neighbor)
-                    return
-            if distance_from_start < neighbor.distance:
+                # If the neighbor has a next node, it means
+                # that it has been visited from the backward direction
+                # Setting neighbor's previous node to the current node forward
                 neighbor.previous = current_node_forward
+                # Setting the next node of the current node forward
+                # as the neighbor.
+                current_node_forward.next = neighbor
+                # And calling the function to draw the path
+                draw_path_bidirectional(grid, neighbor)
+                path_found = True
+                # Empty return statement to break the loop
+                return
+            # If the distance from the start node is less 
+            # than the distance of the neighbor
+            if distance_from_start < neighbor.distance:
+                # Setting the previous node of the neighbor
+                neighbor.previous = current_node_forward
+                # Setting the distance of the neighbor
                 neighbor.distance = distance_from_start
+                # If the neighbor is not in the list of nodes to visit
                 if neighbor not in nodes_to_visit:
-                    nodes_to_visit.append(neighbor)                    
+                    # Adding the neighbor to the list of nodes to visit
+                    nodes_to_visit.append(neighbor)
+                    # Color the neighbor as ACTIVE
                     neighbor.make_active()
                 
         for neighbor in current_node_reverse.neighbors:
+            # Creating variable for the distance from the end node
             distance_from_end = current_node_reverse.distance + 1
             if neighbor.previous:
-                    neighbor.next = current_node_reverse
-                    current_node_reverse.previous = neighbor
-                    draw_path_bidirectional(grid, neighbor)
-                    return
-            if distance_from_end < neighbor.distance:
+                # If the neighbor has a previous node, it means
+                # that it has been visited from the forward direction.
+                # Setting neighbor's next node to the current node reverse
                 neighbor.next = current_node_reverse
+                # Setting the previous node of the current node reverse
+                # as the neighbor.
+                current_node_reverse.previous = neighbor
+                # And calling the function to draw the path
+                draw_path_bidirectional(grid, neighbor)
+                path_found = True
+                # Empty return statement to break the loop
+                return
+            # If the distance from the end node is less
+            # than the distance of the neighbor
+            if distance_from_end < neighbor.distance:
+                # Setting the next node of the neighbor
+                neighbor.next = current_node_reverse
+                # Setting the distance of the neighbor
                 neighbor.distance = distance_from_end
+                # If the neighbor is not in the list of nodes to visit
                 if neighbor not in nodes_to_visit_reverse:
-                    nodes_to_visit_reverse.append(neighbor)                    
+                    # Adding the neighbor to the list of nodes to visit
+                    nodes_to_visit_reverse.append(neighbor)
+                    # Color the neighbor as ACTIVE        
                     neighbor.make_active()
                 
-        
+        # Color all nodes we visited as VISITED,
+        # except the start and end nodes
         if current_node_forward != start_node:
             current_node_forward.make_visited()
         if current_node_reverse != end_node:
             current_node_reverse.make_visited()
+        # Displaying the grid every iteration to animate the process
         display_grid(grid)
+    # If after the loop the path was not found,
+    # we let the user know about it.
     if not path_found:
         print("No path found. The end or the start node is blocked.")
         
@@ -667,7 +747,7 @@ def place_start_node_manually(grid):
             print(terminal.home + terminal.clear)
             for row in grid:
                 print(" ".join(str(node) for node in row))
-            print("Place start node.")            
+            print("Place the start node.")            
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the start node.")
 
@@ -725,7 +805,7 @@ def place_end_node_manually(grid):
             print(terminal.home + terminal.clear)
             for row in grid:
                 print(" ".join(str(node) for node in row))
-            print("Place start node.")
+            print("Place the end node.")
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the end node.")
 
