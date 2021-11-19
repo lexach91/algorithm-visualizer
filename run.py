@@ -739,19 +739,36 @@ def place_start_node_manually(grid):
     """
     Allows user to place start node on the grid manually.
     """
+    # Making sure that the start node is not on the grid
     start_node = None
+    # Creating a variable to place temporary start node on the grid,
+    # and coloring it as START
     temp_start = grid[1][1]
     temp_start.make_start()
+    # terminal.cbreak() makes the terminal read key presses instantly
+    # terminal.hidden_cursor() hides the cursor from the screen
     with terminal.cbreak(), terminal.hidden_cursor():
+        # While the start node is not placed on the grid
         while not start_node:
+            # Every iteration we clear the screen
             print(terminal.home + terminal.clear)
+            # And display the grid
+            # The reason why the function display_grid() is not used here
+            # is because it contains sleep() function, which we don't need here
             for row in grid:
                 print(" ".join(str(node) for node in row))
+            # Displaying the instructions to the user under the grid
             print("Place the start node.")            
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the start node.")
-
+            print("Press ESC to cancel the start node placement.")
+            # Variable to store the key pressed by the user
             key_pressed = terminal.inkey(timeout=0.1)
+            # If the user pressed any of the arrow keys,
+            # we check if the node can be moved there.
+            # If it can, we make the temporary start node EMPTY,
+            # and move the temporary start node to the new position,
+            # coloring it as START.
             if key_pressed.code == terminal.KEY_UP:
                 if (
                     temp_start.row > 1
@@ -784,32 +801,58 @@ def place_start_node_manually(grid):
                     temp_start.make_empty()
                     temp_start = grid[temp_start.row][temp_start.col + 1]
                     temp_start.make_start()
-            elif key_pressed.code == terminal.KEY_ENTER:
-                start_node = temp_start
-                return start_node
+            # If the user pressed ENTER, we return the start node
+            elif key_pressed.code == terminal.KEY_ENTER:                
+                return temp_start
+            # If the user pressed ESC, we make the temporary start node EMPTY,
+            # and return None
+            elif key_pressed.code == terminal.KEY_ESCAPE:
+                temp_start.make_empty()
+                return None
+            # For any other key, we do nothing
+            else:
+                continue
 
 
 def place_end_node_manually(grid):
     """
     Allows user to place end node on the grid manually.
     """
+    # Making sure that the end node is not on the grid
     end_node = None
+    # Creating a variable for the temporary end node.
     temp_end = None
+    # Looping through the grid to find the first empty node.
     for row in grid:
         for node in row:
             if node.is_empty():
                 temp_end = node
+    # Color the temporary end node as END
     temp_end.make_end()
+    # terminal.cbreak() makes the terminal read key presses instantly
+    # terminal.hidden_cursor() hides the cursor from the screen
     with terminal.cbreak(), terminal.hidden_cursor():
+        # While the end node is not placed on the grid
         while not end_node:
+            # Every iteration we clear the screen
             print(terminal.home + terminal.clear)
+            # And display the grid
+            # The reason why the function display_grid() is not used here
+            # is because it contains sleep() function, which we don't need here
             for row in grid:
                 print(" ".join(str(node) for node in row))
+            # Displaying the instructions to the user under the grid
             print("Place the end node.")
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the end node.")
-
+            print("Press ESC to cancel the end node placement.")
+            # Variable to store the key pressed by the user
             key_pressed = terminal.inkey(timeout=0.1)
+            # If the user pressed any of the arrow keys,
+            # we check if the node can be moved there.
+            # If it can, we make the temporary end node EMPTY,
+            # and move the temporary end node to the new position,
+            # coloring it as END.
             if key_pressed.code == terminal.KEY_UP:
                 if temp_end.row > 1 and grid[temp_end.row - 1][temp_end.col].is_empty():
                     temp_end.make_empty()
@@ -836,9 +879,18 @@ def place_end_node_manually(grid):
                     temp_end.make_empty()
                     temp_end = grid[temp_end.row][temp_end.col + 1]
                     temp_end.make_end()
+            # If the user pressed ENTER, we return the end node
             elif key_pressed.code == terminal.KEY_ENTER:
                 end_node = temp_end
                 return end_node
+            # If the user pressed ESC, we make the temporary end node EMPTY,
+            # and return None
+            elif key_pressed.code == terminal.KEY_ESCAPE:
+                temp_end.make_empty()
+                return None
+            # For any other key, we do nothing
+            else:
+                continue
 
 
 def main():
