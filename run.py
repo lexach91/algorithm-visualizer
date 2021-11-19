@@ -1,6 +1,6 @@
 from time import sleep
-import numpy as np
 import random
+import numpy as np
 from blessed import Terminal, terminal
 from simple_term_menu import TerminalMenu
 
@@ -34,7 +34,7 @@ class Node:
         self.color = EMPTY
         # Empty list to store neighbors of the node in the future.
         self.neighbors = []
-        # Distance from the start node to the current node. 
+        # Distance from the start node to the current node.
         # Infinity by default. Used in all pathfinding algorithms.
         self.distance = float("inf")
         # Variable to store the previous node in the path.
@@ -64,7 +64,8 @@ class Node:
         """
         Updates the neighbors of the current node skipping the walls.
         """
-        self.neighbors = [] # reset the neighbors list
+        # reset the neighbors list
+        self.neighbors = []
         row, col = self.get_position()
         # Node to the top of the current node
         if row > 0 and not grid[row - 1][col].is_wall():
@@ -179,7 +180,9 @@ def generate_grid():
     """
     Generates and returns a grid of nodes as a 2D numpy array.
     """
-    return np.array([[Node(row, col) for col in range(WIDTH)] for row in range(HEIGHT)])
+    return np.array(
+        [[Node(row, col) for col in range(WIDTH)] for row in range(HEIGHT)]
+        )
 
 
 def update_all_neighbors(grid):
@@ -211,16 +214,17 @@ def reset_grid(grid):
 
 def reset_grid_partially(grid):
     """
-    Resets visited and active nodes on the grid before running another algorithm.
+    Resets visited and active nodes on the grid
+    before running another algorithm.
     """
     for row in grid:
         for node in row:
             if (
-                node.is_visited()
-                or node.is_active()
-                or node.is_path()
-                and not node.is_end()
-                and not node.is_start()
+                node.is_visited() or
+                node.is_active() or
+                node.is_path() and not
+                node.is_end() and not
+                node.is_start()
             ):
                 node.reset()
 
@@ -235,6 +239,7 @@ def display_grid(grid):
             print(" ".join(str(node) for node in row))
         sleep(0.15)
 
+
 def display_prepared_grid(start_node, end_node, grid):
     """
     Places the start and end nodes on the grid and displays it.
@@ -242,6 +247,7 @@ def display_prepared_grid(start_node, end_node, grid):
     start_node.make_start()
     end_node.make_end()
     display_grid(grid)
+
 
 def generate_horizontal_maze(grid):
     """
@@ -263,7 +269,7 @@ def generate_vertical_maze(grid):
     for col in range(2, WIDTH - 2, 2):
         skip = random.randint(1, HEIGHT - 2)
         for i in range(1, HEIGHT - 1):
-            # Using numpy slicing here to easily get the column.    
+            # Using numpy slicing here to easily get the column.
             grid[:, col][i].make_wall()
             display_grid(grid)
         grid[:, col][skip].reset()
@@ -273,36 +279,36 @@ def generate_spiral_maze(grid):
     """
     Generates a maze in a form of a spiral
     """
-    left = 1 # Start from the left border
-    right = WIDTH - 2 # Finish two columns from the right border
-    top = 2 # Start two rows from the top
-    bottom = HEIGHT - 2 # Finish two rows from the bottom
+    left = 1  # Start from the left border
+    right = WIDTH - 2  # Finish two columns from the right border
+    top = 2  # Start two rows from the top
+    bottom = HEIGHT - 2  # Finish two rows from the bottom
 
     while left < right and top < bottom:
         if left > right:
             break
-        for i in range(left, right): # Drawing wall from left to right
+        for i in range(left, right):  # Drawing wall from left to right
             grid[top][i].make_wall()
             display_grid(grid)
-        top += 2 # Moving to the next row down leaving a gap
+        top += 2  # Moving to the next row down leaving a gap
         if top > bottom:
             break
-        for i in range(top - 1, bottom): # Drawing wall from top to bottom
+        for i in range(top - 1, bottom):  # Drawing wall from top to bottom
             grid[i][right - 1].make_wall()
             display_grid(grid)
-        right -= 2 # Moving to the next column to the left leaving a gap
+        right -= 2  # Moving to the next column to the left leaving a gap
         if right < left:
             break
-        for i in range(right, left, -1): # Drawing wall from right to left
+        for i in range(right, left, -1):  # Drawing wall from right to left
             grid[bottom - 1][i].make_wall()
             display_grid(grid)
-        bottom -= 2 # Moving to the next row up leaving a gap
+        bottom -= 2  # Moving to the next row up leaving a gap
         if bottom < top:
             break
-        for i in range(bottom, top - 1, -1): # Drawing wall from bottom to top
+        for i in range(bottom, top - 1, -1):  # Drawing wall from bottom to top
             grid[i][left + 1].make_wall()
             display_grid(grid)
-        left += 2 # Moving to the next column to the right leaving a gap
+        left += 2  # Moving to the next column to the right leaving a gap
 
 
 def generate_random_pattern(grid):
@@ -311,7 +317,7 @@ def generate_random_pattern(grid):
     """
     for row in range(1, HEIGHT):
         for col in range(1, WIDTH):
-            if random.random() < 0.14: # 0.14 is the probability of a barrier
+            if random.random() < 0.14:  # 0.14 is the probability of a barrier
                 grid[row][col].make_wall()
         display_grid(grid)
 
@@ -322,7 +328,7 @@ def generate_maze_recursive_division(
     """
     Generates a maze using recursive division algorithm.
     """
-    if row_end - row_start < 2 and col_end - col_start < 2: # Stop condition
+    if row_end - row_start < 2 and col_end - col_start < 2:  # Stop condition
         return
     # Horizontal division
     if orientation == "horizontal":
@@ -340,30 +346,45 @@ def generate_maze_recursive_division(
                 grid[current_row][col].make_empty()
                 continue
             display_grid(grid)
-        # Checking upper and lower parts of the grid 
+        # Checking upper and lower parts of the grid
         # if we need to divide it horizontally or vertically
         # and recursively calling the function
-        
-        # If height of the upper part is greater than width, 
+
+        # If height of the upper part is greater than width,
         # we divide horizontally
         if current_row - 2 - row_start > col_end - col_start:
             generate_maze_recursive_division(
-                grid, row_start, current_row - 2, col_start, col_end, "horizontal"
+                grid,
+                row_start,
+                current_row - 2,
+                col_start,
+                col_end,
+                "horizontal"
             )
-        # If width of the upper part is greater than height, 
+        # If width of the upper part is greater than height,
         # we divide vertically
         else:
             generate_maze_recursive_division(
-                grid, row_start, current_row - 2, col_start, col_end, "vertical"
+                grid,
+                row_start,
+                current_row - 2,
+                col_start,
+                col_end,
+                "vertical"
             )
         # If height of the lower part is greater than width,
         # we divide horizontally
         if row_end - current_row - 2 > col_end - col_start:
             generate_maze_recursive_division(
-                grid, current_row + 2, row_end, col_start, col_end, "horizontal"
+                grid,
+                current_row + 2,
+                row_end,
+                col_start,
+                col_end,
+                "horizontal"
             )
         # If width of the lower part is greater than height,
-        # we divide vertically    
+        # we divide vertically
         else:
             generate_maze_recursive_division(
                 grid, current_row + 2, row_end, col_start, col_end, "vertical"
@@ -387,30 +408,50 @@ def generate_maze_recursive_division(
         # Checking left and right parts of the grid
         # if we need to divide it horizontally or vertically
         # and recursively calling the function
-        
+
         # If height of the left part is greater than width,
         # we divide horizontally
         if row_end - row_start > current_col - 2 - col_start:
             generate_maze_recursive_division(
-                grid, row_start, row_end, col_start, current_col - 2, "horizontal"
+                grid,
+                row_start,
+                row_end,
+                col_start,
+                current_col - 2,
+                "horizontal"
             )
         # If width of the left part is greater than height,
-        # we divide vertically    
+        # we divide vertically
         else:
             generate_maze_recursive_division(
-                grid, row_start, row_end, col_start, current_col - 2, "vertical"
+                grid,
+                row_start,
+                row_end,
+                col_start,
+                current_col - 2,
+                "vertical"
             )
         # If height of the right part is greater than width,
         # we divide horizontally
         if row_end - row_start > col_end - current_col - 2:
             generate_maze_recursive_division(
-                grid, row_start, row_end, current_col + 2, col_end, "horizontal"
+                grid,
+                row_start,
+                row_end,
+                current_col + 2,
+                col_end,
+                "horizontal"
             )
         # If width of the right part is greater than height,
         # we divide vertically
         else:
             generate_maze_recursive_division(
-                grid, row_start, row_end, current_col + 2, col_end, "vertical"
+                grid,
+                row_start,
+                row_end,
+                current_col + 2,
+                col_end,
+                "vertical"
             )
 
 
@@ -439,7 +480,7 @@ def dijkstra(grid, start_node, end_node):
     """
     Searches for the shortest path from the start node to the end node
     using Dijkstra's algorithm.
-    """    
+    """
     # Flag to check if the path was found
     path_found = False
     # Resetting the grid from previous searches
@@ -470,7 +511,7 @@ def dijkstra(grid, start_node, end_node):
 
         for neighbor in current_node.neighbors:
             # Creating a variable for the distance from the start node
-            # and setting it to the distance of the current node + 1 
+            # and setting it to the distance of the current node + 1
             distance_from_start = current_node.distance + 1
             # If the distance is less than the distance of the neighbor
             if distance_from_start < neighbor.distance:
@@ -487,7 +528,7 @@ def dijkstra(grid, start_node, end_node):
                         # we found the path and we call the function to draw it
                         draw_path(grid, neighbor)
                         path_found = True
-                        return # Empty return statement to exit the function
+                        return  # Empty return statement to exit the function
                     # If the neighbor is not the end node,
                     # we color it as ACTIVE
                     neighbor.make_active()
@@ -496,7 +537,7 @@ def dijkstra(grid, start_node, end_node):
             # After visiting the node, we color it as VISITED
             current_node.make_visited()
             # Displaying the grid every iteration to animate the process
-            display_grid(grid)            
+            display_grid(grid)
     if not path_found:
         # If after the loop the path was not found,
         # we let the user know about it
@@ -539,10 +580,10 @@ def a_star(grid, start_node, end_node):
     start_node.distance = 0
     # Calculating the manhattan distance from the start node to the end node
     start_node.manhattan_distance = manhattan_distance(start_node, end_node)
-    # Setting the total cost of the start node 
+    # Setting the total cost of the start node
     # to sum of its distance and manhattan distance
     start_node.total_cost = start_node.distance + start_node.manhattan_distance
-    # Resetting the distance of the end node to infinity    
+    # Resetting the distance of the end node to infinity
     end_node.distance = float("inf")
     # Setting the previous node of the start node to None
     start_node.previous = None
@@ -559,7 +600,10 @@ def a_star(grid, start_node, end_node):
             # Creating variables for the distance from the start node,
             # manhattan distance and total cost
             distance_from_start = current_node.distance + 1
-            manhattan_distance_from_end = manhattan_distance(neighbor, end_node)
+            manhattan_distance_from_end = manhattan_distance(
+                neighbor,
+                end_node
+                )
             total_cost = distance_from_start + manhattan_distance_from_end
             # If the distance is less than the distance of the neighbor
             if distance_from_start < neighbor.distance:
@@ -593,6 +637,7 @@ def a_star(grid, start_node, end_node):
         # we let the user know about it
         print("No path found. The end or the start node is blocked.")
 
+
 def draw_path_bidirectional(grid, intersection_node):
     """
     Draws the path from the intersection node
@@ -625,6 +670,7 @@ def draw_path_bidirectional(grid, intersection_node):
             drawing = False
         # Displaying the grid every iteration to animate the process
         display_grid(grid)
+
 
 def bidirectional_breadth_first_search(grid, start_node, end_node):
     """
@@ -660,7 +706,7 @@ def bidirectional_breadth_first_search(grid, start_node, end_node):
         # Creating variables for current nodes from both lists
         current_node_forward = nodes_to_visit.pop(0)
         current_node_reverse = nodes_to_visit_reverse.pop(0)
-        
+
         for neighbor in current_node_forward.neighbors:
             # Creating variable for the distance from the start node
             distance_from_start = current_node_forward.distance + 1
@@ -677,7 +723,7 @@ def bidirectional_breadth_first_search(grid, start_node, end_node):
                 path_found = True
                 # Empty return statement to break the loop
                 return
-            # If the distance from the start node is less 
+            # If the distance from the start node is less
             # than the distance of the neighbor
             if distance_from_start < neighbor.distance:
                 # Setting the previous node of the neighbor
@@ -690,7 +736,7 @@ def bidirectional_breadth_first_search(grid, start_node, end_node):
                     nodes_to_visit.append(neighbor)
                     # Color the neighbor as ACTIVE
                     neighbor.make_active()
-                
+
         for neighbor in current_node_reverse.neighbors:
             # Creating variable for the distance from the end node
             distance_from_end = current_node_reverse.distance + 1
@@ -718,9 +764,9 @@ def bidirectional_breadth_first_search(grid, start_node, end_node):
                 if neighbor not in nodes_to_visit_reverse:
                     # Adding the neighbor to the list of nodes to visit
                     nodes_to_visit_reverse.append(neighbor)
-                    # Color the neighbor as ACTIVE        
+                    # Color the neighbor as ACTIVE
                     neighbor.make_active()
-                
+
         # Color all nodes we visited as VISITED,
         # except the start and end nodes
         if current_node_forward != start_node:
@@ -733,7 +779,7 @@ def bidirectional_breadth_first_search(grid, start_node, end_node):
     # we let the user know about it.
     if not path_found:
         print("No path found. The end or the start node is blocked.")
-        
+
 
 def place_start_node_manually(grid):
     """
@@ -758,7 +804,7 @@ def place_start_node_manually(grid):
             for row in grid:
                 print(" ".join(str(node) for node in row))
             # Displaying the instructions to the user under the grid
-            print("Place the start node.")            
+            print("Place the start node.")
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the start node.")
             print("Press ESC to cancel the start node placement.")
@@ -771,38 +817,38 @@ def place_start_node_manually(grid):
             # coloring it as START.
             if key_pressed.code == terminal.KEY_UP:
                 if (
-                    temp_start.row > 1
-                    and grid[temp_start.row - 1][temp_start.col].is_empty()
+                    temp_start.row > 1 and
+                    grid[temp_start.row - 1][temp_start.col].is_empty()
                 ):
                     temp_start.make_empty()
                     temp_start = grid[temp_start.row - 1][temp_start.col]
                     temp_start.make_start()
             elif key_pressed.code == terminal.KEY_DOWN:
                 if (
-                    temp_start.row < HEIGHT - 2
-                    and grid[temp_start.row + 1][temp_start.col].is_empty()
+                    temp_start.row < HEIGHT - 2 and
+                    grid[temp_start.row + 1][temp_start.col].is_empty()
                 ):
                     temp_start.make_empty()
                     temp_start = grid[temp_start.row + 1][temp_start.col]
                     temp_start.make_start()
             elif key_pressed.code == terminal.KEY_LEFT:
                 if (
-                    temp_start.col > 1
-                    and grid[temp_start.row][temp_start.col - 1].is_empty()
+                    temp_start.col > 1 and
+                    grid[temp_start.row][temp_start.col - 1].is_empty()
                 ):
                     temp_start.make_empty()
                     temp_start = grid[temp_start.row][temp_start.col - 1]
                     temp_start.make_start()
             elif key_pressed.code == terminal.KEY_RIGHT:
                 if (
-                    temp_start.col < WIDTH - 2
-                    and grid[temp_start.row][temp_start.col + 1].is_empty()
+                    temp_start.col < WIDTH - 2 and
+                    grid[temp_start.row][temp_start.col + 1].is_empty()
                 ):
                     temp_start.make_empty()
                     temp_start = grid[temp_start.row][temp_start.col + 1]
                     temp_start.make_start()
             # If the user pressed ENTER, we return the start node
-            elif key_pressed.code == terminal.KEY_ENTER:                
+            elif key_pressed.code == terminal.KEY_ENTER:
                 return temp_start
             # If the user pressed ESC, we make the temporary start node EMPTY,
             # and return None
@@ -854,27 +900,33 @@ def place_end_node_manually(grid):
             # and move the temporary end node to the new position,
             # coloring it as END.
             if key_pressed.code == terminal.KEY_UP:
-                if temp_end.row > 1 and grid[temp_end.row - 1][temp_end.col].is_empty():
+                if (
+                    temp_end.row > 1 and
+                    grid[temp_end.row - 1][temp_end.col].is_empty()
+                ):
                     temp_end.make_empty()
                     temp_end = grid[temp_end.row - 1][temp_end.col]
                     temp_end.make_end()
             elif key_pressed.code == terminal.KEY_DOWN:
                 if (
-                    temp_end.row < HEIGHT - 2
-                    and grid[temp_end.row + 1][temp_end.col].is_empty()
+                    temp_end.row < HEIGHT - 2 and
+                    grid[temp_end.row + 1][temp_end.col].is_empty()
                 ):
                     temp_end.make_empty()
                     temp_end = grid[temp_end.row + 1][temp_end.col]
                     temp_end.make_end()
             elif key_pressed.code == terminal.KEY_LEFT:
-                if temp_end.col > 1 and grid[temp_end.row][temp_end.col - 1].is_empty():
+                if (
+                    temp_end.col > 1 and
+                    grid[temp_end.row][temp_end.col - 1].is_empty()
+                ):
                     temp_end.make_empty()
                     temp_end = grid[temp_end.row][temp_end.col - 1]
                     temp_end.make_end()
             elif key_pressed.code == terminal.KEY_RIGHT:
                 if (
-                    temp_end.col < WIDTH - 2
-                    and grid[temp_end.row][temp_end.col + 1].is_empty()
+                    temp_end.col < WIDTH - 2 and
+                    grid[temp_end.row][temp_end.col + 1].is_empty()
                 ):
                     temp_end.make_empty()
                     temp_end = grid[temp_end.row][temp_end.col + 1]
@@ -938,10 +990,22 @@ def main():
         "Go back",
     ]
     # Variable for all menus.
-    main_menu = TerminalMenu(options_main, title="Main menu")
-    grid_menu = TerminalMenu(options_grid, title="Grid menu")
-    start_end_menu = TerminalMenu(options_start_end, title="Start and end node menu")
-    pathfinder_menu = TerminalMenu(options_pathfinder, title="Pathfinder menu")
+    main_menu = TerminalMenu(
+        options_main,
+        title="Main menu"
+        )
+    grid_menu = TerminalMenu(
+        options_grid,
+        title="Grid menu"
+        )
+    start_end_menu = TerminalMenu(
+        options_start_end,
+        title="Start and end node menu"
+        )
+    pathfinder_menu = TerminalMenu(
+        options_pathfinder,
+        title="Pathfinder menu"
+        )
 
     # Flag to check if the app is running.
     app_running = True
@@ -1017,13 +1081,16 @@ def main():
                 user_choice = main_menu.show()
         elif options_main[user_choice] == "Place start and end node":
             user_choice = start_end_menu.show()
-            if options_start_end[user_choice] != "Go back" and not pattern_generated:
+            if (
+                options_start_end[user_choice] != "Go back" and not
+                pattern_generated
+            ):
                 # If the user chose to place start and end node,
                 # but the pattern has not been generated yet,
                 # we let the user know that pattern must be generated first.
                 display_grid(grid)
                 print("No pattern generated yet.")
-            elif options_start_end[user_choice] == "Place by default":                
+            elif options_start_end[user_choice] == "Place by default":
                 # First we partially reset the grid,
                 # to clean it after the previous pathfinding algorithm runs,
                 # but not touching the pattern.
@@ -1056,7 +1123,7 @@ def main():
                 if end_node:
                     end_node.reset()
                     end_node = None
-                # Loop to add all empty nodes to the list.    
+                # Loop to add all empty nodes to the list.
                 for row in grid:
                     for node in row:
                         if node.is_empty():
@@ -1093,7 +1160,10 @@ def main():
                 user_choice = main_menu.show()
         elif options_main[user_choice] == "Pathfinder algorithms":
             user_choice = pathfinder_menu.show()
-            if options_pathfinder[user_choice] != "Go back" and (not start_node or not end_node):
+            if (
+                options_pathfinder[user_choice] != "Go back" and
+                (not start_node or not end_node)
+            ):
                 # If the user chose to run a pathfinder algorithm,
                 # but the start and end node have not been placed yet,
                 # we let the user know that they must place them first.
@@ -1114,7 +1184,6 @@ def main():
         elif options_main[user_choice] == "Exit":
             # If the user chose to exit, we exit the program.
             app_running = False
-
 
 
 # Checking if we are running this file directly.
