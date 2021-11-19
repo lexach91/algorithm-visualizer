@@ -1154,7 +1154,10 @@ def main():
                 end_node = place_end_node_manually(grid)
                 # Calling the function to draw the start and end node
                 # and display the grid.
-                display_prepared_grid(start_node, end_node, grid)
+                if start_node and end_node:
+                    display_prepared_grid(start_node, end_node, grid)
+                else:
+                    display_grid(grid)
             elif options_start_end[user_choice] == "Go back":
                 # If the user chose to go back, we display the main menu again.
                 user_choice = main_menu.show()
