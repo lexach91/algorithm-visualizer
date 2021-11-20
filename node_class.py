@@ -12,6 +12,7 @@ from constants import (
     VISITED,
     ACTIVE
 )
+
 class Node:
     """
     Class that represents every cell on the grid.

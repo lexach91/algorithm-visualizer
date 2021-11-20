@@ -10,7 +10,7 @@ def generate_horizontal_maze(grid):
     Generates a maze with horizontal walls with random passages
     """
     for row in range(2, HEIGHT - 2, 2):
-        skip = random.randint(1, WIDTH - 1)
+        skip = random.randint(1, WIDTH - 2)
         for col in range(1, WIDTH - 1):
             if col == skip:
                 continue
