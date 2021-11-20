@@ -1,6 +1,10 @@
 """
 Constants for the project.
 """
+from blessed import Terminal
+
+terminal = Terminal()
+
 WALL = "⬜️"
 PATH = "🟦"
 VISITED = "🟩"
