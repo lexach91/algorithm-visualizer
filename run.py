@@ -1,6 +1,6 @@
 import random
 from simple_term_menu import TerminalMenu
-from constants import HEIGHT, WIDTH
+from constants import HEIGHT, WIDTH, terminal
 from grid_functions import (
     generate_grid,
     reset_grid,
@@ -86,6 +86,24 @@ def main():
     # Flag to check if the app is running.
     app_running = True
 
+    print(
+        terminal.home +
+        terminal.clear +
+        terminal.bold +
+        terminal.yellow +
+        "Welcome to pathfinding algorithms visualizer!\n" +
+        terminal.normal
+    )
+
+    print(
+        terminal.purple +
+        "In the menu bellow you can:\n" +
+        "   1. generate the grid\n" +
+        "   2. place the start and the end node\n" +
+        "   3. choose the algorithm to run and visualize\n" +
+        terminal.normal
+    )
+
     while app_running:
         # First we show the main menu to the user,
         # and store the user's choice to the variable.
@@ -97,11 +115,15 @@ def main():
                 # For empty grid, we just call reset_grid function
                 # to draw a border wall on the grid.
                 reset_grid(grid)
+                start_node = None
+                end_node = None
                 display_grid(grid)
                 # Changing the flag to True
                 pattern_generated = True
             elif options_grid[user_choice] == "Random pattern":
                 reset_grid(grid)
+                start_node = None
+                end_node = None
                 # For random pattern, we call generate_random_pattern function
                 generate_random_pattern(grid)
                 display_grid(grid)
@@ -109,6 +131,8 @@ def main():
                 pattern_generated = True
             elif options_grid[user_choice] == "Maze with vertical walls":
                 reset_grid(grid)
+                start_node = None
+                end_node = None
                 # For maze with vertical walls,
                 # we call generate_maze_vertical_walls function
                 generate_vertical_maze(grid)
@@ -117,6 +141,8 @@ def main():
                 pattern_generated = True
             elif options_grid[user_choice] == "Maze with horizontal walls":
                 reset_grid(grid)
+                start_node = None
+                end_node = None
                 # For maze with horizontal walls,
                 # we call generate_maze_horizontal_walls function
                 generate_horizontal_maze(grid)
@@ -125,6 +151,8 @@ def main():
                 pattern_generated = True
             elif options_grid[user_choice] == "Maze with spiral pattern":
                 reset_grid(grid)
+                start_node = None
+                end_node = None
                 # For maze with spiral pattern,
                 # we call generate_maze_spiral_pattern function
                 generate_spiral_maze(grid)
@@ -133,6 +161,8 @@ def main():
                 pattern_generated = True
             elif options_grid[user_choice] == "Maze recursive division":
                 reset_grid(grid)
+                start_node = None
+                end_node = None
                 # For maze with recursive division,
                 # we call generate_maze_recursive_division function
                 # and pass the grid, the start row, the end row,
@@ -144,10 +174,10 @@ def main():
                 # end_col equal to WIDTH - 2,
                 # because we want not to touch the border walls and
                 # last row and column,
-                # orientation equal to "horizontal",
-                # because we want to start with creating a horizontal wall.
+                # orientation equal to "vertical",
+                # because we want to start with creating a vertical wall.
                 generate_maze_recursive_division(
-                    grid, 2, HEIGHT - 2, 2, WIDTH - 2, "horizontal"
+                    grid, 2, HEIGHT - 2, 2, WIDTH - 2, "vertical"
                 )
                 display_grid(grid)
                 # Changing the flag to True
@@ -165,7 +195,12 @@ def main():
                 # but the pattern has not been generated yet,
                 # we let the user know that pattern must be generated first.
                 display_grid(grid)
-                print("No pattern generated yet.")
+                print(
+                    terminal.red +
+                    terminal.underline +
+                    "No pattern generated yet." +
+                    terminal.normal
+                    )
             elif options_start_end[user_choice] == "Place by default":
                 # First we partially reset the grid,
                 # to clean it after the previous pathfinding algorithm runs,
@@ -247,7 +282,12 @@ def main():
                 # but the start and end node have not been placed yet,
                 # we let the user know that they must place them first.
                 display_grid(grid)
-                print("Start and end node not placed yet.")
+                print(
+                    terminal.red +
+                    terminal.underline +
+                    "Start and end node not placed yet." +
+                    terminal.normal
+                    )
             elif options_pathfinder[user_choice] == "Dijkstra's algorithm":
                 # Calling the function to run Dijkstra's algorithm.
                 dijkstra(grid, start_node, end_node)
@@ -263,6 +303,15 @@ def main():
         elif options_main[user_choice] == "Exit":
             # If the user chose to exit, we exit the program.
             app_running = False
+            print(
+                terminal.home +
+                terminal.clear +
+                terminal.green +
+                terminal.bold +
+                "Thank you for using the app!\n" +
+                "Have a nice day, bye!" +
+                terminal.normal
+                )
 
 
 # Checking if we are running this file directly.

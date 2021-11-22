@@ -25,7 +25,12 @@ def draw_path(grid, end_node):
         current_node = current_node.previous
         # Displaying the grid every iteration to animate the process
         display_grid(grid)
-        print("Path found!")
+        print(
+            terminal.underline +
+            terminal.blue +
+            "Path found!" +
+            terminal.normal
+            )
 
 
 def dijkstra(grid, start_node, end_node):
@@ -43,7 +48,12 @@ def dijkstra(grid, start_node, end_node):
     if start_node in end_node.neighbors:
         print(terminal.home + terminal.clear)
         display_grid(grid)
-        print("The start and the end node are neighbors!")
+        print(
+            terminal.underline +
+            terminal.blue +
+            "The start and the end node are neighbors!" +
+            terminal.normal
+            )
         return
     # Setting distance of the start node to 0
     start_node.distance = 0
@@ -93,7 +103,14 @@ def dijkstra(grid, start_node, end_node):
     if not path_found:
         # If after the loop the path was not found,
         # we let the user know about it
-        print("No path found. The end or the start node is blocked.")
+        print(terminal.home + terminal.clear)
+        display_grid(grid)
+        print(
+            terminal.underline +
+            terminal.red +
+            "No path found. The end or the start node is blocked." +
+            terminal.normal
+            )
 
 
 def manhattan_distance(node1, node2):
@@ -126,7 +143,12 @@ def a_star(grid, start_node, end_node):
     if start_node in end_node.neighbors:
         print(terminal.home + terminal.clear)
         display_grid(grid)
-        print("The start and the end node are neighbors!")
+        print(
+            terminal.underline +
+            terminal.blue +
+            "The start and the end node are neighbors!" +
+            terminal.normal
+            )
         return
     # Setting distance of the start node to 0
     start_node.distance = 0
@@ -187,7 +209,14 @@ def a_star(grid, start_node, end_node):
     if not path_found:
         # If after the loop the path was not found,
         # we let the user know about it
-        print("No path found. The end or the start node is blocked.")
+        print(terminal.home + terminal.clear)
+        display_grid(grid)
+        print(
+            terminal.underline +
+            terminal.red +
+            "No path found. The end or the start node is blocked." +
+            terminal.normal
+            )
 
 
 def draw_path_bidirectional(grid, intersection_node):
@@ -222,6 +251,12 @@ def draw_path_bidirectional(grid, intersection_node):
             drawing = False
         # Displaying the grid every iteration to animate the process
         display_grid(grid)
+        print(
+            terminal.underline +
+            terminal.blue +
+            "Path found!" +
+            terminal.normal
+            )
 
 
 def bidirectional_breadth_first_search(grid, start_node, end_node):
@@ -239,7 +274,12 @@ def bidirectional_breadth_first_search(grid, start_node, end_node):
     if start_node in end_node.neighbors:
         print(terminal.home + terminal.clear)
         display_grid(grid)
-        print("The start and the end node are neighbors!")
+        print(
+            terminal.underline +
+            terminal.blue +
+            "The start and the end node are neighbors!" +
+            terminal.normal
+            )
         return
     # Setting distance of the start node to 0
     start_node.distance = 0
@@ -330,4 +370,11 @@ def bidirectional_breadth_first_search(grid, start_node, end_node):
     # If after the loop the path was not found,
     # we let the user know about it.
     if not path_found:
-        print("No path found. The end or the start node is blocked.")
+        print(terminal.home + terminal.clear)
+        display_grid(grid)
+        print(
+            terminal.underline +
+            terminal.red +
+            "No path found. The end or the start node is blocked." +
+            terminal.normal
+            )

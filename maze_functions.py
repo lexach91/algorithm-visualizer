@@ -84,7 +84,7 @@ def generate_maze_recursive_division(
     """
     Generates a maze using recursive division algorithm.
     """
-    if row_end - row_start < 2 and col_end - col_start < 2:  # Stop condition
+    if row_end - row_start < 0 and col_end - col_start < 0:  # Stop condition
         return
     # Horizontal division
     if orientation == "horizontal":

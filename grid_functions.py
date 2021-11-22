@@ -101,7 +101,12 @@ def place_start_node_manually(grid):
             for row in grid:
                 print(" ".join(str(node) for node in row))
             # Displaying the instructions to the user under the grid
-            print("Place the start node.")
+            print(
+                terminal.bold +
+                terminal.yellow +
+                "Place the start node." +
+                terminal.normal
+                )
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the start node.")
             print("Press ESC to cancel the start node placement.")
@@ -185,7 +190,12 @@ def place_end_node_manually(grid):
             for row in grid:
                 print(" ".join(str(node) for node in row))
             # Displaying the instructions to the user under the grid
-            print("Place the end node.")
+            print(
+                terminal.bold +
+                terminal.yellow +
+                "Place the end node." +
+                terminal.normal
+                )
             print("Use ARROW keys to move around the grid.")
             print("Press ENTER to place the end node.")
             print("Press ESC to cancel the end node placement.")
