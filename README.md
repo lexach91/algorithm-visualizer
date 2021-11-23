@@ -1,31 +1,19 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+# Path-finding algorithms visualizer
+[Path-finding algorithms visualizer](https://python-algorithm-visualizer.herokuapp.com/) is a python terminal application that allows the user to understand how the path-finding algorithms work by visualizing them in the terminal.
 
-Welcome USER_NAME,
+User can generate different types of patterns and mazes on the provided grid, place the start and end points, and then run the algorithms to find the shortest path between them.
+![Am I Responsive screenshot](assets/documentation/am-i-responsive.png)
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **August 17, 2021**
+---
 
-## Reminders
+### How to use    
 
-* Your code must be placed in the `run.py` file
-* Your dependencies must be placed in the `requirements.txt` file
-* Do not edit any of the other files or your code may not deploy properly
+- Open this [link](https://python-algorithm-visualizer.herokuapp.com/) or copy it here: `https://python-algorithm-visualizer.herokuapp.com/`, paste it in your browser's address bar, and press enter.
+- When the page is loaded, click the "RUN PROGRAM" button.
+- Navigate through the menu options using the arrow keys on your keyboard, press enter to choose an option.
+- First, you will need to choose the type of pattern you want to generate in the "Grid options".
+- Then, you will need to place the start and end points on the grid in the "Place start and end node".
+- Finally, you will need to choose which algorithm you want to run in "Pathfinder algorithms".
 
-## Creating the Heroku app
+---
 
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
-
-1. `heroku/python`
-2. `heroku/nodejs`
-
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
-
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
-
-Connect your GitHub repository and deploy as normal.
-
-## Constraints
-
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
-
------
-Happy coding!
