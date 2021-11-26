@@ -81,3 +81,32 @@ The third option in the main menu is the "Pathfinder algorithms". Here, the user
 - ##### Exit.
 The last option in the main menu is the "Exit". Here, the user can exit the application and see the bye message.
 ![Exit menu screenshot](assets/documentation/bye-message.png) 
+
+---
+### Flowchart
+In the following flowchart, you can see the basic logic of the application.
+![Flowchart](assets/documentation/flowchart.png)
+
+---
+### Technologies used
+
+###### Languages
+- [Python](https://www.python.org/): The main language used to develop the application.
+- [JavaScript](https://www.javascript.com/): The language used by the Code Institute to run mock terminal in the browser.
+- [HTML](https://www.w3schools.com/html/): The language used by the Code Institute to create the layout needed to run the mock terminal in the browser.
+
+###### Frameworks, libraries, and packages
+- [random](https://docs.python.org/3/library/random.html): used to generate random numbers.
+- [numpy](https://docs.scipy.org/doc/numpy/reference/): used to generate a 2d array used to represent the grid.
+- [time](https://docs.python.org/3/library/time.html): sleep function from the time library was used to make every step of the grid update visible to the user.
+- [blessed](https://pypi.org/project/blessed/): used to manipulate the terminal output.
+- [simple-term-menu](https://pypi.org/project/simple-term-menu/): used to create the terminal menu for the application.
+
+###### Other tools
+- [Git](https://git-scm.com/): used to manage the application source code.
+- [GitHub](https://github.com/): used to host the application source code.
+- [Visual Studio Code](https://code.visualstudio.com/): used to edit the application source code.
+- [Chrome](https://www.google.com/chrome/): used to run the application in the browser.
+- [Draw.io](https://www.draw.io/): used to create the flowchart.
+
+---
