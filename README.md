@@ -77,3 +77,7 @@ The third option in the main menu is the "Pathfinder algorithms". Here, the user
 3. Bi-directional BFS (breadth-first search): This algorithm is running in both directions. It starts from the start node and the end node simultaneously and explores the grid in all directions until it finds the intersection between the two paths. 
 ![Bi-directional BFS algorithm screenshot](assets/documentation/bi-directional.png)
 ![Bi-directional BFS algorithm path screenshot](assets/documentation/bi-directional-path-found.png)
+
+- ##### Exit.
+The last option in the main menu is the "Exit". Here, the user can exit the application and see the bye message.
+![Exit menu screenshot](assets/documentation/bye-message.png) 
