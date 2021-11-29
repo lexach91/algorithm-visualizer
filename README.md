@@ -110,3 +110,25 @@ In the following flowchart, you can see the basic logic of the application.
 - [Draw.io](https://www.draw.io/): used to create the flowchart.
 
 ---
+### Bugs and issues
+- ###### Solved bugs
+1. After deploying the application to heroku, I noticed that the grid was not displayed correctly, all emojis used to represent the walls were overlapping each other. It was because the emojis were wider than the standard character width in the mock terminal provided by the Code Institute.
+    + *Solution*: 
+        - I changed the code in the `display_grid` function:
+        from this:
+        `print("".join(str(node) for node in row))`
+        to this:
+        `print(" ".join(str(node) for node in row))`
+        
+        - Also, when running the app on the desktop, I used the ideographic space unicode character (U+3000) instead of the standard space character (U+0020) as an empty space on the grid, because its width equals the width of the wall emojis. But for correct display on the mock terminal, I used the standard space character (U+0020).
+
+2. There were a bug the function `generate_vertical_maze(grid)`. Some walls were left without passages and some had more then one.
+    + *Solution*:
+        - Instead of using the built-in python list for the grid, I used a numpy array. It was easier to make sure that I don't skip any walls, using numpy array slicing: `grid[:, col][i].make_wall()` - gives us the whole column.
+
+3. There were many minor bugs during the development of the application, that have been solved by manual testing and tweaking.
+
+- ###### Unsolved bugs
+1. The mock terminal that has been provided by the Code Institute freezes sometimes and all you can do is run the application again.
+
+---
