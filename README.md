@@ -132,3 +132,81 @@ In the following flowchart, you can see the basic logic of the application.
 1. The mock terminal that has been provided by the Code Institute freezes sometimes and all you can do is run the application again.
 
 ---
+### Testing
+The application was tested manually during the whole development process. Ubuntu terminal was used to run the application locally and the mock terminal provided by the Code Institute was used to run the application in the browser.
+###### Validator results
+[PEP8 online validator](http://pep8online.com/) was used to check the code for meeting PEP8 requirements. No warnings or errors were found. The results of the validator are in the screenshots below.
+- `run.py`:
+![PEP8 validator results for run.py](assets/documentation/pep8-runpy.png)
+- `constants.py`:
+![PEP8 validator results for constants.py](assets/documentation/pep8-constants.png)
+- `node_class.py`:
+![PEP8 validator results for node_class.py](assets/documentation/pep8-nodeclass.png)
+- `grid_functions.py`:
+![PEP8 validator results for grid_functions.py](assets/documentation/pep8-grid.png)
+- `maze_functions.py`:
+![PEP8 validator results for maze_functions.py](assets/documentation/pep8-maze.png)
+- `pathfinding_algorithms.py`:
+![PEP8 validator results for pathfinding_algorithms.py](assets/documentation/pep8-algorithms.png)
+
+---
+### Deployment
+The application was deployed to [Heroku](https://www.heroku.com/) and can be accessed from the following link: [Pathfinding algorithm visualizer](https://python-algorithm-visualizer.herokuapp.com/)
+
+**The steps to deploy the application to Heroku are:**
+1. Create a Heroku account if you don't have one.
+2. In the dashboard, go to the "Apps" tab.
+3. Click on the "New" button and choose "Create a new app".
+4. Enter a name for the app.
+5. Choose a region.
+6. Click on the "Create" button.
+7. Open the app you created and go to the "Settings" tab.
+8. At the "Config Vars" section, click on the "Add" button and enter the following:
+    - key: `PORT`
+    - value: `8000`
+9. At the "Buildpacks" section, click on the "Add" button and choose:
+    - Python
+    - Node.js
+    The order of the buildpacks is important.
+10. After that, click on the "Deploy" tab.
+11. At the "Deployment method" section choose GitHub and connect your GitHub account.
+12. Then you need to choose the repository you want to deploy.
+13. Go down to the "Manual deploy" section, choose the branch you want to deploy, and click on the "Deploy branch" button.
+14. The application will be deployed to Heroku. You can access it by clicking on the "View" button.
+
+**The steps to run the application locally on your machine are:**
+1. The application requires you to have Python 3 installed on your machine.
+    - If you are using Windows, you can download Python 3 from [Python website](https://www.python.org/downloads/windows/).
+    - If you are using Linux, the Python 3 installation is probably already included in your distribution, but if not, you can install it by running the following command in you terminal:
+        + For Ubuntu or other Debian based distributions: `sudo apt-get install python3`
+        + For Fedora or other Red Hat based distributions: `sudo yum install python3`
+        + For Arch Linux based distributions: `sudo pacman -S python3`
+        + Other installation instructions can be found [here](https://www.python.org/downloads/).
+    - If you are using MacOS, you can download Python 3 from [Python website](https://www.python.org/downloads/macosx/).
+2. Now you need to download the application source code from GitHub.
+    + Go to the GitHub repository and click on the "Download ZIP" button, and extract the contents of the zip file to the folder where you want to place the application.
+    + Or use the following command to download the application source code:
+        + `git clone https://github.com/lexach91/algorithm-visualizer.git`
+3. Now you need to install the dependencies.
+    + Navigate to the folder where you placed the application source code and run the following command:
+        + `pip3 install -r requirements.txt`
+
+4. (**IMPORTANT**) Before running the application on your machine, you will need to change the following code:
+    + In the `constants.py` file find these two lines:
+    ![Changes needed for desktop](assets/documentation/constants-empty.png)
+    Uncomment the first line and comment the second one. Also you can change the WIDTH and the HEIGHT constants to make the grid larger or smaller (choose the odd numbers).
+    + In the `grid_functions.py` file:
+        - find the function `display_grid`:
+        ![Changes needed for desktop](assets/documentation/display-grid.png)
+        Change the `print(" ".join(str(node) for node in row))` line to `print("".join(str(node) for node in row))`.
+        - find the functions `place_start_node_manually` and `place_end_node_manually`:
+        ![Changes needed for desktop](assets/documentation/place-start-changes.png)
+        ![Changes needed for desktop](assets/documentation/place-end-changes.png)
+        In both functions, change the `print(" ".join(str(node) for node in row))` line to `print("".join(str(node) for node in row))`.
+5. Now you can run the application on your machine by running the following command:
+    + `python3 run.py`
+---
+### Credits
+- The inspiration for creating this application came from discovering [Pathinding Visualizer](https://clementmihailescu.github.io/Pathfinding-Visualizer/) by [Clement Mihailescu](https://www.youtube.com/channel/UCaO6VoaYJv4kS-TQO_M-N_g) and by watching youtube videos by [Tim Ruscica](https://www.youtube.com/channel/UC4JX40jDee_tINbkjycV4Sg).
+- The idea of using emojis as grid items in terminal was inspired by this unusual [Snake Game](https://replit.com/@ykdojo/snake-game-but-youre-the-food) made by the creator of youtube channel [CS Dojo](https://www.youtube.com/c/CSDojo).
+- The template for running the application in mock terminal in the browser was provided by [Code Institute](https://www.codeinstitute.net/).
