@@ -17,7 +17,11 @@ from maze_functions import (
     generate_maze_recursive_division,
     generate_spiral_maze
     )
-from pathfinding_algorithms import dijkstra, a_star, bidirectional_breadth_first_search
+from pathfinding_algorithms import (
+    dijkstra,
+    a_star,
+    bidirectional_breadth_first_search
+    )
 
 
 # List of options for the main menu

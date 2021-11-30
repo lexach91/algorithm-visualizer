@@ -13,8 +13,8 @@ VISITED = "🟩"
 ACTIVE = "🟨"
 START = "🧐"
 END = "🏁"
-# EMPTY = "　" # This line should be used when the app is running on desktop
-EMPTY = " " # This line should be used when the app is running on heroku
+# EMPTY = "　"  # This line should be used when the app is running on desktop
+EMPTY = " "  # This line should be used when the app is running on heroku
 
 WIDTH = 25
 HEIGHT = 19

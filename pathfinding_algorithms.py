@@ -7,6 +7,8 @@ from grid_functions import (
     reset_grid_partially,
     update_all_neighbors,
 )
+
+
 def draw_path(grid, end_node):
     """
     Draws path from the end node to the start node on the grid.

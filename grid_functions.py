@@ -6,6 +6,7 @@ import numpy as np
 from constants import WIDTH, HEIGHT, terminal
 from node_class import Node
 
+
 def generate_grid():
     """
     Generates and returns a grid of nodes as a 2D numpy array.
@@ -77,6 +78,7 @@ def display_prepared_grid(start_node, end_node, grid):
     start_node.make_start()
     end_node.make_end()
     display_grid(grid)
+
 
 def place_start_node_manually(grid):
     """

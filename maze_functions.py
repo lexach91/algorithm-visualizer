@@ -5,6 +5,7 @@ import random
 from constants import WIDTH, HEIGHT
 from grid_functions import display_grid
 
+
 def generate_horizontal_maze(grid):
     """
     Generates a maze with horizontal walls with random passages

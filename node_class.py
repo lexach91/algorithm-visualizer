@@ -13,6 +13,7 @@ from constants import (
     ACTIVE
 )
 
+
 class Node:
     """
     Class that represents every cell on the grid.
