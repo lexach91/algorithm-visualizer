@@ -174,7 +174,7 @@ In the following flowchart, you can see the basic logic of the application.
 
 - ###### Unsolved bugs
 
-1. The mock terminal that the Code Institute has provided freezes sometimes, and all you can do is rerun the application. I don't know if it's the mock terminal's fault or Heroku's fault.
+1. The mock terminal that the Code Institute has provided freezes sometimes, and all you can do is rerun the application. I don't know if it's the mock terminal's fault or Heroku's fault. Also, the terminal screen is blinking sometimes if you run the application on Heroku.
 
 ---
 
