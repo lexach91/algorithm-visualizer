@@ -9,12 +9,12 @@ Users can generate different patterns and mazes on the provided grid, place the 
 
 ### How to use    
 
-- Open this [link](https://python-algorithm-visualizer.herokuapp.com/) or copy it from here: `https://python-algorithm-visualizer.herokuapp.com/`, paste it into your browser's address bar, and press enter.
-- When the page is loaded, click the "RUN PROGRAM" button.
-- Navigate through the menu options using the arrow keys on your keyboard, press enter to choose an option.
-- First, you will need to choose the type of pattern you want to generate in the "Grid options".
-- Then, you will need to place the start and end points on the grid in the "Place start and end node".
-- Finally, you will need to choose which algorithm you want to run in "Pathfinder algorithms".
+1. Open this [link](https://python-algorithm-visualizer.herokuapp.com/) or copy it from here: `https://python-algorithm-visualizer.herokuapp.com/`, paste it into your browser's address bar, and press enter.
+2. When the page is loaded, click the "RUN PROGRAM" button.
+3. Navigate through the menu options using the arrow keys on your keyboard, press enter to choose an option.
+4. First, you will need to choose the type of pattern you want to generate in the "Grid options".
+5. Then, you will need to place the start and end points on the grid in the "Place start and end node".
+6. Finally, you will need to choose which algorithm you want to run in "Pathfinder algorithms".
 
 ---
 
