@@ -1,7 +1,7 @@
-# Path-finding algorithms visualizer
-[Path-finding algorithms visualizer](https://python-algorithm-visualizer.herokuapp.com/) is a python terminal application that allows the user to understand how the path-finding algorithms work by visualizing them in the terminal.
+# Pathfinding algorithms visualizer
+[Pathfinding algorithms visualizer](https://python-algorithm-visualizer.herokuapp.com/) is a python terminal application that allows the user to understand how the pathfinding algorithms work by visualizing them in the terminal.
 
-User can generate different types of patterns and mazes on the provided grid, place the start and end points, and then run the algorithms to find the shortest path between them.
+Users can generate different patterns and mazes on the provided grid, place the start and end points, and then run the algorithms to find the shortest path between them.
 
 ![Am I Responsive screenshot](assets/documentation/am-i-responsive.png)
 
@@ -20,10 +20,10 @@ User can generate different types of patterns and mazes on the provided grid, pl
 
 ### User stories
 
-- As a first time visitor, I want to be able to understand the main purpose of the application.
-- As a first time visitor, I want to be able to see the instructions on how to use the application.
-- As a first time visitor, I want to be able to see the different types of patterns that can be generated.
-- As a first time visitor, I want to be able to see the different algorithms that can be used to find the shortest path between the start and end points.
+- As a first-time visitor, I want to be able to understand the main purpose of the application.
+- As a first-time visitor, I want to be able to see the instructions on how to use the application.
+- As a first-time visitor, I want to be able to see the different types of patterns that can be generated.
+- As a first-time visitor, I want to be able to see the different algorithms that can be used to find the shortest path between the start and end points.
 - As a user, I want to be able to see how the algorithms work with different patterns and different start and end nodes placement on the grid.
 - As a user, I want to be able to change the pattern type, start and end nodes placement, and algorithm without restarting the application.
 
@@ -65,7 +65,7 @@ The first option in the main menu is the "Grid options". Here, the user can choo
 
 ![Maze with spiral pattern screenshot](assets/documentation/spiral-maze.png)
 
-6. Maze recursive division: The maze on the grid will be generated using recursive division algorithm.
+6. Maze recursive division: The maze on the grid will be generated using the recursive division algorithm.
 
 ![Maze recursive division screenshot](assets/documentation/recursive-maze.png)
 
@@ -74,7 +74,7 @@ The second option in the main menu is the "Place start and end node". Here, the 
 
 ![Place start and end node menu screenshot](assets/documentation/start-end-menu.png)
 
-1. Place by default: The start node will be placed in the top left corner and the end node will be placed in the bottom right corner.
+1. Place by default: The start node will be placed in the top left corner, and the end node will be placed in the bottom right corner.
 
 ![Place by default screenshot](assets/documentation/place-by-default.png)
 
@@ -93,13 +93,13 @@ The third option in the main menu is the "Pathfinder algorithms". Here, the user
 
 ![Pathfinder algorithms menu screenshot](assets/documentation/pathfinder-menu.png)
 
-1. Dijkstra's algorithm: The algorithm will find the shortest path between the start and end points using the Dijkstra's algorithm. In our case, it works as the breadth-first search algorithm because all the nodes on the grid are connected and have the same weight (distance equal to 1). As we can see in the screenshots, the algorithm starts from the start node and explores the grid in all directions until it reaches the end node.
+1. Dijkstra's algorithm: The algorithm will find the shortest path between the start and end points using Dijkstra's algorithm. In our case, it works as the breadth-first search algorithm because all the nodes on the grid are connected and have the same weight (distance equals 1). As we can see in the screenshots, the algorithm starts from the start node and explores the grid in all directions until it reaches the end node.
 
 ![Dijkstra's algorithm screenshot](assets/documentation/dijkstra.png)
 
 ![Dijkstra's algorithm path screenshot](assets/documentation/dijkstra-path-found.png)
 
-2. A* (A star) algorithm: This algorithm is very similar to the Dijkstra's and Breadth-first search algorithms. The difference is that the algorithm uses the heuristic function to calculate the distance between the start and end points. The heuristic function is the distance between the start and end points. In our case, the heuristic function is the Manhattan distance. As we can see in the screenshots, the algorithm starts from the start node and explores the grid in directions that have the shortest distance to the end node.
+2. A* (A star) algorithm: This algorithm is very similar to Dijkstra's and Breadth-first search algorithms. The difference is that the algorithm uses the heuristic function to calculate the distance between the start and end points. The heuristic function is the distance between the start and end points. In our case, the heuristic function is the Manhattan distance. As we can see in the screenshots, the algorithm starts from the start node and explores the grid in directions that have the shortest distance to the end node.
 
 ![A* algorithm screenshot](assets/documentation/a-star.png)
 
@@ -130,7 +130,7 @@ In the following flowchart, you can see the basic logic of the application.
 ###### Languages
 
 - [Python](https://www.python.org/): The main language used to develop the application.
-- [JavaScript](https://www.javascript.com/): The language used by the Code Institute to run mock terminal in the browser.
+- [JavaScript](https://www.javascript.com/): The language used by the Code Institute to run the mock terminal in the browser.
 - [HTML](https://www.w3schools.com/html/): The language used by the Code Institute to create the layout needed to run the mock terminal in the browser.
 
 ###### Frameworks, libraries, and packages
@@ -153,7 +153,7 @@ In the following flowchart, you can see the basic logic of the application.
 
 - ###### Solved bugs
 
-1. After deploying the application to heroku, I noticed that the grid was not displayed correctly, all emojis used to represent the walls were overlapping each other. It was because the emojis were wider than the standard character width in the mock terminal provided by the Code Institute.
+1. After deploying the application to Heroku, I noticed that the grid was not displayed correctly; all emojis used to represent the walls were overlapping. It was because the emojis were wider than the standard character width in the mock terminal provided by the Code Institute.
 
     + *Solution*:
 
@@ -163,23 +163,23 @@ In the following flowchart, you can see the basic logic of the application.
         to this:
         `print(" ".join(str(node) for node in row))`
         
-        - Also, when running the app on the desktop, I used the ideographic space unicode character (U+3000) instead of the standard space character (U+0020) as an empty space on the grid, because its width equals the width of the wall emojis. But for correct display on the mock terminal, I used the standard space character (U+0020).
+        - Also, when running the app on the desktop, I used the ideographic space Unicode character (U+3000) instead of the standard space character (U+0020) as an empty space on the grid because its width equals the width of the wall emojis. But for correct display on the mock terminal, I used the standard space character (U+0020).
 
-2. There were a bug the function `generate_vertical_maze(grid)`. Some walls were left without passages and some had more then one.
+2. There was a bug in the function `generate_vertical_maze(grid)`. Some walls were left without passages, and some had more than one.
     + *Solution*:
 
-        - Instead of using the built-in python list for the grid, I used a numpy array. It was easier to make sure that I don't skip any walls, using numpy array slicing: `grid[:, col][i].make_wall()` - gives us the whole column.
+        - Instead of using the built-in python list for the grid, I used a NumPy array. It was easier to make sure I didn't skip any walls, using NumPy array slicing: `grid[:, col][i].make_wall()` - gives us the whole column.
 
-3. There were many minor bugs during the development of the application, that have been solved by manual testing and tweaking.
+3. Many minor bugs during the application development were solved by manual testing and tweaking.
 
 - ###### Unsolved bugs
 
-1. The mock terminal that has been provided by the Code Institute freezes sometimes and all you can do is run the application again. I don't know if it's mock terminal's fault or Heroku's fault.
+1. The mock terminal that the Code Institute has provided freezes sometimes, and all you can do is rerun the application. I don't know if it's the mock terminal's fault or Heroku's fault.
 
 ---
 
 ### Testing
-The application was tested manually during the whole development process. Ubuntu terminal was used to run the application locally and the mock terminal provided by the Code Institute was used to run the application in the browser.
+The application was tested manually during the whole development process. Ubuntu terminal was used to run the application locally, and the mock terminal provided by the Code Institute was used to run the application in the browser.
 
 ###### Validator results
 
@@ -244,9 +244,9 @@ The application was deployed to [Heroku](https://www.heroku.com/) and can be acc
 
 10. After that, click on the "Deploy" tab.
 
-11. At the "Deployment method" section choose GitHub and connect your GitHub account.
+11. At the "Deployment method" section, choose GitHub and connect your GitHub account.
 
-12. Then you need to choose the repository you want to deploy.
+12. Then, you need to choose the repository you want to deploy.
 
 13. Go down to the "Manual deploy" section, choose the branch you want to deploy, and click on the "Deploy branch" button.
 
@@ -258,34 +258,34 @@ The application was deployed to [Heroku](https://www.heroku.com/) and can be acc
 
     - If you are using Windows, you can download Python 3 from [Python website](https://www.python.org/downloads/windows/).
 
-    - If you are using Linux, the Python 3 installation is probably already included in your distribution, but if not, you can install it by running the following command in you terminal:
+    - If you are using Linux, the Python 3 installation is probably already included in your distribution, but if not, you can install it by running the following command in your terminal:
 
         + For Ubuntu or other Debian based distributions: `sudo apt-get install python3`
         + For Fedora or other Red Hat based distributions: `sudo yum install python3`
         + For Arch Linux based distributions: `sudo pacman -S python3`
         + Other installation instructions can be found [here](https://www.python.org/downloads/).
 
-    - If you are using MacOS, you can download Python 3 from [Python website](https://www.python.org/downloads/macosx/).
+    - If you are using macOS, you can download Python 3 from [Python website](https://www.python.org/downloads/macosx/).
 
-2. Now you need to download the application source code from GitHub.
+2. Now, you need to download the application source code from GitHub.
 
-    + Go to the GitHub repository and click on the "Download ZIP" button, and extract the contents of the zip file to the folder where you want to place the application.
+    + Go to the GitHub repository, click on the "Download ZIP" button, and extract the zip file's contents to the folder where you want to place the application.
 
     + Or use the following command to download the application source code:
         + `git clone https://github.com/lexach91/algorithm-visualizer.git`
 
-3. Now you need to install the dependencies.
+3. Now, you need to install the dependencies.
 
     + Navigate to the folder where you placed the application source code and run the following command:
         + `pip3 install -r requirements.txt`
 
 4. (**IMPORTANT**) Before running the application on your machine, you will need to change the following code:
 
-    + In the `constants.py` file find these two lines:
+    + In the `constants.py` file, find these two lines:
 
     ![Changes needed for desktop](assets/documentation/constants-empty.png)
 
-    Uncomment the first line and comment the second one. Also you can change the WIDTH and the HEIGHT constants to make the grid larger or smaller (choose the odd numbers).
+    Uncomment the first line and comment the second one. Also, you can change the WIDTH and the HEIGHT constants to make the grid larger or smaller (choose the odd numbers).
 
     + In the `grid_functions.py` file:
 
@@ -298,7 +298,7 @@ The application was deployed to [Heroku](https://www.heroku.com/) and can be acc
         ![Changes needed for desktop](assets/documentation/place-end-changes.png)
         In both functions, change the `print(" ".join(str(node) for node in row))` line to `print("".join(str(node) for node in row))`.
 
-5. Now you can run the application on your machine by running the following command:
+5. Now, you can run the application on your machine by running the following command:
     + `python3 run.py`
 
 ---
@@ -307,6 +307,6 @@ The application was deployed to [Heroku](https://www.heroku.com/) and can be acc
 
 - The inspiration for creating this application came from discovering [Pathinding Visualizer](https://clementmihailescu.github.io/Pathfinding-Visualizer/) by [Clement Mihailescu](https://www.youtube.com/channel/UCaO6VoaYJv4kS-TQO_M-N_g) and by watching youtube videos by [Tim Ruscica](https://www.youtube.com/channel/UC4JX40jDee_tINbkjycV4Sg).
 
-- The idea of using emojis as grid items in terminal was inspired by this unusual [Snake Game](https://replit.com/@ykdojo/snake-game-but-youre-the-food) made by the creator of youtube channel [CS Dojo](https://www.youtube.com/c/CSDojo).
+- The idea of using emojis as grid items in the terminal was inspired by this unusual [Snake Game](https://replit.com/@ykdojo/snake-game-but-youre-the-food) made by the creator of youtube channel [CS Dojo](https://www.youtube.com/c/CSDojo).
 
-- The template for running the application in mock terminal in the browser was provided by [Code Institute](https://www.codeinstitute.net/).
+- The template for running the application in the mock terminal in the browser was provided by [Code Institute](https://www.codeinstitute.net/).
