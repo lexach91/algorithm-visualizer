@@ -300,6 +300,8 @@ The application was deployed to [Heroku](https://www.heroku.com/) and can be acc
 
 5. Now, you can run the application on your machine by running the following command:
     + `python3 run.py`
+    
+6. *P.S. Running the application on your machine will provide much more enjoyable experience than running it on Heroku.*
 
 ---
 
