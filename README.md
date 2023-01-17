@@ -1,5 +1,5 @@
 # Pathfinding algorithms visualizer
-[Pathfinding algorithms visualizer](https://python-algorithm-visualizer.herokuapp.com/) is a python terminal application that allows the user to understand how the pathfinding algorithms work by visualizing them in the terminal.
+[Pathfinding algorithms visualizer](https://python-algorithm-visualizer.onrender.com/) is a python terminal application that allows the user to understand how the pathfinding algorithms work by visualizing them in the terminal.
 
 Users can generate different patterns and mazes on the provided grid, place the start and end points, and then run the algorithms to find the shortest path between them.
 
@@ -9,7 +9,7 @@ Users can generate different patterns and mazes on the provided grid, place the 
 
 ### How to use    
 
-1. Open this [link](https://python-algorithm-visualizer.herokuapp.com/) or copy it from here: `https://python-algorithm-visualizer.herokuapp.com/`, paste it into your browser's address bar, and press enter.
+1. Open this [link](https://python-algorithm-visualizer.onrender.com/) or copy it from here: `https://python-algorithm-visualizer.onrender.com/`, paste it into your browser's address bar, and press enter.
 2. When the page is loaded, click the "RUN PROGRAM" button.
 3. Navigate through the menu options using the arrow keys on your keyboard, press enter to choose an option.
 4. First, you will need to choose the type of pattern you want to generate in the "Grid options".
@@ -213,7 +213,11 @@ The application was tested manually during the whole development process. Ubuntu
 
 ### Deployment
 
-The application was deployed to [Heroku](https://www.heroku.com/) and can be accessed from the following link: [Pathfinding algorithm visualizer](https://python-algorithm-visualizer.herokuapp.com/)
+**The app was initially deployed to Heroku then moved to Render since Heroku has removed its free tier services from November 29 2022**
+
+The application was deployed to [Render](https://www.render.com/) and can be accessed from the following link: [Pathfinding algorithm visualizer](https://python-algorithm-visualizer.onrender.com/)
+
+#### Heroku deployment
 
 **The steps to deploy the application to Heroku are:**
 
@@ -302,6 +306,42 @@ The application was deployed to [Heroku](https://www.heroku.com/) and can be acc
     + `python3 run.py`
     
 6. *P.S. Running the application on your machine will provide much more enjoyable experience than running it on Heroku.*
+
+#### Render deployment
+
+
+1. Create a new Render account if you don't already have one here [Render](https://render.com/).
+
+2. Create a new application on the following page here [New Render App](https://dashboard.render.com/), choose **Webserver**:
+
+3. Select the GitHub option and connect the application to the repository you created.
+
+4. Search for the repository you created and click "Connect."
+
+5. Create name for the application
+
+6. Select the region where you want to deploy the application.
+
+7. Select branch to deploy.
+
+8. Select environment.
+
+9. Render build command: `pip3 install -r requirements.txt && npm install`
+
+10. Render start command: `node index.js`
+
+11. Select Free plan.
+
+12. Click on "Advanced" settings.
+
+13. Add the following environment variables:
+
+    - Key: PORT Value: 8000
+    - Key: PYTHON_VERSION Value: 3.10.7
+
+14. Click "Create Web Service."
+
+15. Wait for the completion of the deployment.
 
 ---
 
