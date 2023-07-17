@@ -25,6 +25,7 @@ from pathfinding_algorithms import (
 
 
 # List of options for the main menu
+# Some other comment
 options_main = [
     "Grid options",
     "Place start and end node",
